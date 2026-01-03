@@ -172,9 +172,116 @@ const MOCK_REVIEWS = [
 
 export default function VendorDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const [copied, setCopied] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+
+  const storeUrl = typeof window !== 'undefined' 
+    ? `${window.location.origin}/vendors/${id}` 
+    : `/vendors/${id}`;
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(storeUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+
+  const openWhatsAppChat = (productName?: string) => {
+    const message = productName 
+      ? `Hi! I'm interested in ${productName} from ${MOCK_VENDOR.store_name} on ShopThings.`
+      : `Hi! I'm interested in your products at ${MOCK_VENDOR.store_name} on ShopThings.`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${MOCK_VENDOR.whatsapp?.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+  };
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Share Modal */}
+      {showShareModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-2xl w-full max-w-md p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold">Share Store</h3>
+              <button 
+                onClick={() => setShowShareModal(false)}
+                className="p-2 hover:bg-muted rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Store Link */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium mb-2">Store Link</label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={storeUrl}
+                  readOnly
+                  className="flex-1 px-4 py-2 border border-border rounded-lg bg-muted text-sm"
+                />
+                <Button
+                  onClick={copyToClipboard}
+                  variant={copied ? 'secondary' : 'outline'}
+                  size="sm"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-4 h-4 mr-1" />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4 mr-1" />
+                      Copy
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            {/* Share on Social */}
+            <div>
+              <label className="block text-sm font-medium mb-3">Share on Social Media</label>
+              <div className="flex items-center gap-3">
+                <a
+                  href={`https://wa.me/?text=${encodeURIComponent(`Check out ${MOCK_VENDOR.store_name} on ShopThings! ${storeUrl}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-12 h-12 bg-[#25D366] text-white rounded-full hover:opacity-90 transition-opacity"
+                >
+                  <WhatsAppIcon className="w-6 h-6" />
+                </a>
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out ${MOCK_VENDOR.store_name} on ShopThings!`)}&url=${encodeURIComponent(storeUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-12 h-12 bg-black text-white rounded-full hover:opacity-90 transition-opacity"
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                </a>
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(storeUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-12 h-12 bg-[#1877F2] text-white rounded-full hover:opacity-90 transition-opacity"
+                >
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Banner */}
       <div className="h-48 md:h-64 bg-gradient-to-br from-secondary/30 to-primary/30 relative">
         <div className="absolute inset-0 bg-primary/10" />
@@ -225,16 +332,69 @@ export default function VendorDetailPage({ params }: { params: Promise<{ id: str
                     <Heart className="w-4 h-4 mr-1" />
                     Follow
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setShowShareModal(true)}
+                  >
                     <Share2 className="w-4 h-4 mr-1" />
                     Share
                   </Button>
-                  <Button variant="primary" size="sm">
-                    <MessageCircle className="w-4 h-4 mr-1" />
-                    Contact
-                  </Button>
+                  {MOCK_VENDOR.whatsapp && (
+                    <Button 
+                      variant="primary" 
+                      size="sm"
+                      onClick={() => openWhatsAppChat()}
+                      className="bg-[#25D366] hover:bg-[#128C7E]"
+                    >
+                      <WhatsAppIcon className="w-4 h-4 mr-1" />
+                      Chat
+                    </Button>
+                  )}
                 </div>
               </div>
+
+              {/* Social Links */}
+              {(MOCK_VENDOR.social_links?.instagram || MOCK_VENDOR.social_links?.tiktok) && (
+                <div className="flex items-center gap-3 mt-4">
+                  <span className="text-sm text-muted-foreground">Follow us:</span>
+                  {MOCK_VENDOR.social_links.instagram && (
+                    <a
+                      href={MOCK_VENDOR.social_links.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 text-white rounded-full hover:opacity-90 transition-opacity"
+                      title="Instagram"
+                    >
+                      <InstagramIcon className="w-4 h-4" />
+                    </a>
+                  )}
+                  {MOCK_VENDOR.social_links.tiktok && (
+                    <a
+                      href={MOCK_VENDOR.social_links.tiktok}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center w-8 h-8 bg-black text-white rounded-full hover:opacity-90 transition-opacity"
+                      title="TikTok"
+                    >
+                      <TikTokIcon className="w-4 h-4" />
+                    </a>
+                  )}
+                  {MOCK_VENDOR.social_links.facebook && (
+                    <a
+                      href={MOCK_VENDOR.social_links.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center w-8 h-8 bg-[#1877F2] text-white rounded-full hover:opacity-90 transition-opacity"
+                      title="Facebook"
+                    >
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                      </svg>
+                    </a>
+                  )}
+                </div>
+              )}
 
               {/* Stats */}
               <div className="flex flex-wrap gap-6 mt-6 pt-6 border-t border-border">
