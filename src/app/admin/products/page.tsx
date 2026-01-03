@@ -242,6 +242,7 @@ export default function AdminProductsPage() {
           <button
             onClick={() => setSidebarOpen(false)}
             className="lg:hidden p-1 hover:bg-white/10 rounded"
+            aria-label="Close sidebar"
           >
             <X className="w-5 h-5" />
           </button>
@@ -311,6 +312,7 @@ export default function AdminProductsPage() {
               <button
                 onClick={() => setSidebarOpen(true)}
                 className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
+                aria-label="Open sidebar"
               >
                 <Menu className="w-5 h-5" />
               </button>
@@ -372,6 +374,7 @@ export default function AdminProductsPage() {
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
                     className="px-3 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+                    aria-label="Filter by status"
                   >
                     <option value="all">All Status</option>
                     <option value="pending_review">Pending Review</option>
@@ -398,7 +401,7 @@ export default function AdminProductsPage() {
                     <div className="p-4">
                       <div className="flex gap-4">
                         {/* Product Image */}
-                        <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
                           <ImageIcon className="w-8 h-8 text-gray-300" />
                         </div>
 
@@ -406,7 +409,7 @@ export default function AdminProductsPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between mb-1">
                             <h3 className="font-medium text-foreground truncate pr-2">{product.name}</h3>
-                            <div className="flex items-center gap-2 flex-shrink-0">
+                            <div className="flex items-center gap-2 shrink-0">
                               <span className={`flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full ${statusConfig.bg} ${statusConfig.text}`}>
                                 <StatusIcon className="w-3 h-3" />
                                 {statusConfig.label}
@@ -418,6 +421,7 @@ export default function AdminProductsPage() {
                                     setShowActions(showActions === product.id ? null : product.id);
                                   }}
                                   className="p-1 hover:bg-gray-100 rounded"
+                                  aria-label="More actions"
                                 >
                                   <MoreVertical className="w-4 h-4 text-gray-500" />
                                 </button>
@@ -528,7 +532,7 @@ export default function AdminProductsPage() {
                     {product.status === 'flagged' && product.flag_reason && (
                       <div className="px-4 py-3 bg-orange-50 border-t border-orange-100">
                         <div className="flex items-start gap-2">
-                          <AlertTriangle className="w-4 h-4 text-orange-600 flex-shrink-0 mt-0.5" />
+                          <AlertTriangle className="w-4 h-4 text-orange-600 shrink-0 mt-0.5" />
                           <p className="text-sm text-orange-800">{product.flag_reason}</p>
                         </div>
                       </div>
@@ -723,6 +727,7 @@ export default function AdminProductsPage() {
                   setReasonText('');
                 }}
                 className="p-2 hover:bg-gray-100 rounded-lg"
+                aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -773,6 +778,7 @@ export default function AdminProductsPage() {
                   setReasonText('');
                 }}
                 className="p-2 hover:bg-gray-100 rounded-lg"
+                aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
               </button>
