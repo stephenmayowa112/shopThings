@@ -451,6 +451,7 @@ export default function ProfilePage() {
                             className={`relative w-12 h-6 rounded-full transition-colors ${
                               notifications[item.key as keyof typeof notifications] ? 'bg-secondary' : 'bg-muted'
                             }`}
+                            aria-label={`Toggle ${item.label}`}
                           >
                             <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${
                               notifications[item.key as keyof typeof notifications] ? 'translate-x-7' : 'translate-x-1'
@@ -482,6 +483,7 @@ export default function ProfilePage() {
                             className={`relative w-12 h-6 rounded-full transition-colors ${
                               notifications[item.key as keyof typeof notifications] ? 'bg-secondary' : 'bg-muted'
                             }`}
+                            aria-label={`Toggle ${item.label}`}
                           >
                             <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${
                               notifications[item.key as keyof typeof notifications] ? 'translate-x-7' : 'translate-x-1'
@@ -509,6 +511,7 @@ export default function ProfilePage() {
                           className={`relative w-12 h-6 rounded-full transition-colors ${
                             notifications.sms_orders ? 'bg-secondary' : 'bg-muted'
                           }`}
+                          aria-label="Toggle SMS order updates"
                         >
                           <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${
                             notifications.sms_orders ? 'translate-x-7' : 'translate-x-1'
