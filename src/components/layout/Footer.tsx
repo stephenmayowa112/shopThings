@@ -65,8 +65,6 @@ export default function Footer() {
                 height={40}
                 className="h-10 w-auto brightness-0 invert"
               />
-                Shop<span className="text-secondary">Things</span>
-              </span>
             </Link>
             <p className="text-white/80 text-sm mb-6">
               Discover the Spirit of Africa. Authentic crafts, fashion, and art from verified sellers across the continent.
