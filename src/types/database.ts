@@ -582,7 +582,22 @@ export interface Database {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      get_or_create_conversation: {
+        Args: {
+          p_buyer_id: string;
+          p_vendor_id: string;
+          p_product_id?: string | null;
+        };
+        Returns: string;
+      };
+      mark_messages_as_read: {
+        Args: {
+          p_conversation_id: string;
+          p_user_id: string;
+          p_is_buyer: boolean;
+        };
+        Returns: void;
+      };
     };
     Enums: {
       user_role: UserRole;
