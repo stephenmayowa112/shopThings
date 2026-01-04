@@ -52,8 +52,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
       {/* Top bar */}
       <div className="bg-primary text-white text-sm py-2">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-          <p>Free shipping on orders over ₦50,000 🎉</p>
+        <div className="max-w-7xl mx-auto px-4 flex justify-end items-center">
           <div className="hidden md:flex items-center space-x-4">
             <Link href="/vendor/register" className="hover:text-secondary transition-colors">
               Sell on ShopThings
