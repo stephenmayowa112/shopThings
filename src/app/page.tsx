@@ -136,51 +136,38 @@ export default function Home() {
       {/* Verified Sellers */}
       <section className="py-16 px-4 bg-muted">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary">
-                Verified Sellers
-              </h2>
-              <p className="text-muted-foreground mt-1">
-                Shop with confidence from our trusted vendors
-              </p>
-            </div>
-            <Link 
-              href="/vendors" 
-              className="hidden md:flex items-center text-secondary hover:text-secondary/80 font-medium transition-colors"
-            >
-              View All <ArrowRight className="w-4 h-4 ml-1" />
-            </Link>
+          <div className="mb-8">
+            <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary">
+              Verified Sellers
+            </h2>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {VERIFIED_SELLERS.map((seller) => (
               <div
-                key={seller.name}
+                key={seller.slug}
                 className="bg-white rounded-xl p-6 border border-border hover:shadow-lg transition-shadow"
               >
                 <div className="flex items-center space-x-4 mb-4">
-                  <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                    {seller.name.charAt(0)}
+                  <div className="relative w-16 h-16 rounded-full overflow-hidden bg-muted">
+                    <Image 
+                      src={seller.avatar}
+                      alt={seller.name}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <div className="flex items-center">
                       <h3 className="font-semibold text-foreground">{seller.name}</h3>
                       <BadgeCheck className="w-4 h-4 ml-1 text-secondary" />
                     </div>
-                    <p className="text-sm text-muted-foreground">{seller.location}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{seller.description}</p>
                   </div>
                 </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{seller.products} products</span>
-                  <span className="flex items-center">
-                    <span className="text-warning">★</span>
-                    <span className="ml-1 font-medium">{seller.rating}</span>
-                  </span>
-                </div>
-                <Link href={`/vendors/${seller.name.toLowerCase().replace(/\s+/g, '-')}`}>
+                <Link href={`/vendors/${seller.slug}`}>
                   <Button variant="outline" fullWidth className="mt-4">
-                    Visit Store
+                    View Profile
                   </Button>
                 </Link>
               </div>
