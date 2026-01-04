@@ -1,62 +1,58 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, BadgeCheck, ShoppingBag, Truck, Shield, HeartHandshake } from 'lucide-react';
 import { Button } from '@/components/ui';
 
-// Mock featured categories
+// Featured categories - only 4 to match mockup
 const FEATURED_CATEGORIES = [
-  { name: 'African Fashion', slug: 'african-fashion', icon: '👗', count: 1250 },
-  { name: 'Art & Sculptures', slug: 'art-sculptures', icon: '🎨', count: 890 },
-  { name: 'Home Decor', slug: 'home-decor', icon: '🏠', count: 654 },
-  { name: 'Gourmet Foods', slug: 'gourmet-foods', icon: '🍯', count: 432 },
-  { name: 'Jewelry', slug: 'jewelry', icon: '💎', count: 786 },
-  { name: 'Beauty & Wellness', slug: 'beauty-wellness', icon: '✨', count: 523 },
-  { name: 'Bags & Accessories', slug: 'bags-accessories', icon: '👜', count: 412 },
-  { name: 'Musical Instruments', slug: 'musical-instruments', icon: '🎵', count: 189 },
+  { name: 'African Fashion', slug: 'african-fashion', image: '/images/categories/african-fashion.jpg', count: 1250 },
+  { name: 'Art & Sculptures', slug: 'art-sculptures', image: '/images/categories/art-sculptures.jpg', count: 890 },
+  { name: 'Home Decor', slug: 'home-decor', image: '/images/categories/home-decor.jpg', count: 654 },
+  { name: 'Gourmet Foods', slug: 'gourmet-foods', image: '/images/categories/gourmet-foods.jpg', count: 432 },
 ];
 
-// Mock verified sellers
+// Verified sellers - 3 to match mockup
 const VERIFIED_SELLERS = [
-  { name: 'Ankara Queen', location: 'Lagos, Nigeria', products: 234, rating: 4.9 },
-  { name: 'Kente Kingdom', location: 'Accra, Ghana', products: 189, rating: 4.8 },
-  { name: 'Maasai Beads', location: 'Nairobi, Kenya', products: 156, rating: 4.9 },
-  { name: 'Cape Crafts', location: 'Cape Town, South Africa', products: 211, rating: 4.7 },
+  { name: 'AfroThreads Co.', slug: 'afrothreads-co', location: 'Lagos, Nigeria', products: 234, rating: 4.9, avatar: '/images/sellers/afrothreads.jpg', description: 'Handcrafted apparel inspired by traditional African textiles' },
+  { name: 'Artisan Carvings', slug: 'artisan-carvings', location: 'Accra, Ghana', products: 189, rating: 4.8, avatar: '/images/sellers/artisan-carvings.jpg', description: 'Intricate wooden sculptures from West African artisans' },
+  { name: 'Spice Route Delights', slug: 'spice-route-delights', location: 'Nairobi, Kenya', products: 156, rating: 4.9, avatar: '/images/sellers/spice-route.jpg', description: 'Authentic spices and gourmet foods from across the continent' },
 ];
 
-// Mock fresh finds
-const FRESH_FINDS = [
-  { name: 'Handwoven Kente Cloth', price: 45000, image: '/placeholder-product.jpg', vendor: 'Kente Kingdom', rating: 4.8 },
-  { name: 'African Print Maxi Dress', price: 25000, image: '/placeholder-product.jpg', vendor: 'Ankara Queen', rating: 4.9 },
-  { name: 'Beaded Maasai Necklace', price: 15000, image: '/placeholder-product.jpg', vendor: 'Maasai Beads', rating: 4.7 },
-  { name: 'Shea Butter Gift Set', price: 12000, image: '/placeholder-product.jpg', vendor: 'Cape Crafts', rating: 4.8 },
+// Curated collections - 4 to match mockup
+const CURATED_COLLECTIONS = [
+  { name: 'Diaspora Fashion Edit', slug: 'diaspora-fashion', image: '/images/collections/diaspora-fashion.jpg' },
+  { name: 'Afro-Caribbean Vibes', slug: 'afro-caribbean', image: '/images/collections/afro-caribbean.jpg' },
+  { name: 'The Sahel Collection', slug: 'sahel', image: '/images/collections/sahel.jpg' },
+  { name: 'East African Innovations', slug: 'east-africa', image: '/images/collections/east-africa.jpg' },
 ];
+
 
 export default function Home() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary via-primary to-primary/90 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/hero-pattern.svg')] opacity-10" />
-        <div className="relative max-w-7xl mx-auto px-4 py-20 md:py-32">
-          <div className="max-w-2xl">
+      <section className="relative h-[500px] md:h-[600px] overflow-hidden">
+        <Image 
+          src="/images/hero/african-marketplace.jpg" 
+          alt="Vibrant African marketplace"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/20" />
+        <div className="relative max-w-7xl mx-auto px-4 h-full flex items-center">
+          <div className="max-w-2xl text-white">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-6 leading-tight">
-              Discover the <span className="text-secondary">Spirit of Africa</span>
+              Discover the Spirit of Africa
             </h1>
-            <p className="text-lg md:text-xl mb-8 text-white/90 leading-relaxed">
-              Explore a curated selection of authentic crafts, fashion, art, and more from verified sellers across the African continent and diaspora.
+            <p className="text-lg md:text-xl mb-8 leading-relaxed">
+              Explore a curated selection of authentic crafts, fashion, and art from across the continent.
             </p>
-            <div className="flex flex-wrap gap-4">
-              <Link href="/products">
-                <Button variant="secondary" size="lg">
-                  <ShoppingBag className="w-5 h-5 mr-2" />
-                  Start Shopping
-                </Button>
-              </Link>
-              <Link href="/vendor/register">
-                <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary">
-                  Become a Seller
-                </Button>
-              </Link>
-            </div>
+            <Link href="/products">
+              <Button variant="secondary" size="lg">
+                Explore Now
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
