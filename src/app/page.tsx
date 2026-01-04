@@ -104,21 +104,10 @@ export default function Home() {
       {/* Featured Categories */}
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary">
-                Featured Categories
-              </h2>
-              <p className="text-muted-foreground mt-1">
-                Browse our most popular collections
-              </p>
-            </div>
-            <Link 
-              href="/categories" 
-              className="hidden md:flex items-center text-secondary hover:text-secondary/80 font-medium transition-colors"
-            >
-              View All <ArrowRight className="w-4 h-4 ml-1" />
-            </Link>
+          <div className="mb-8">
+            <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary">
+              Featured Categories
+            </h2>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -126,27 +115,20 @@ export default function Home() {
               <Link
                 key={category.slug}
                 href={`/categories/${category.slug}`}
-                className="group bg-white border border-border rounded-xl p-6 text-center hover:shadow-lg hover:border-secondary/30 transition-all duration-300"
+                className="group relative aspect-[4/3] overflow-hidden rounded-xl"
               >
-                <div className="w-16 h-16 bg-gradient-to-br from-secondary/20 to-secondary/5 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-300">
-                  {category.icon}
+                <Image 
+                  src={category.image}
+                  alt={category.name}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white">
+                  <h3 className="text-lg md:text-xl font-semibold">{category.name}</h3>
                 </div>
-                <h3 className="font-semibold text-foreground group-hover:text-secondary transition-colors">
-                  {category.name}
-                </h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {category.count.toLocaleString()} products
-                </p>
               </Link>
             ))}
-          </div>
-          
-          <div className="mt-6 text-center md:hidden">
-            <Link href="/categories">
-              <Button variant="outline">
-                View All Categories <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
           </div>
         </div>
       </section>
