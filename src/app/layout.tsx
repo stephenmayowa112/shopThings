@@ -22,6 +22,14 @@ export const metadata: Metadata = {
   title: "ShopThings - African Marketplace",
   description: "Discover the Spirit of Africa. Explore authentic African products, fashion, art, and more from verified sellers across the continent and diaspora.",
   keywords: ["African marketplace", "African products", "African fashion", "African art", "e-commerce"],
+  icons: {
+    icon: [
+      { url: '/images/logo.jpeg', type: 'image/jpeg' },
+    ],
+    apple: [
+      { url: '/images/logo.jpeg', type: 'image/jpeg' },
+    ],
+  },
 };
 
 export default function RootLayout({
