@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  /* ShopThings Brand Colors */
-  --primary: #0B1E3F;
-  --secondary: #16A7A2;
-  --accent: #FF6F61;
+  /* ShopThings Brand Colors - Based on Logo */
+  --primary: #C1272D;      /* Red from logo */
+  --secondary: #FFA500;    /* Orange/Amber from logo */
+  --accent: #FF8C00;       /* Darker orange accent */
   
   /* Background & Foreground */
   --background: #ffffff;
@@ -17,8 +17,8 @@
   
   /* Status Colors */
   --success: #22c55e;
-  --warning: #f59e0b;
-  --error: #ef4444;
+  --warning: #FFA500;      /* Using logo orange for warnings */
+  --error: #C1272D;        /* Using logo red for errors */
 }
 
 @theme inline {
@@ -59,7 +59,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary:hover {
-  background-color: #0d2650;
+  background-color: #9a1f24;  /* Darker red on hover */
 }
 
 .btn-secondary {
@@ -72,7 +72,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-secondary:hover {
-  background-color: #128f8a;
+  background-color: #e69500;  /* Darker orange on hover */
 }
 
 .btn-accent {
@@ -85,7 +85,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-accent:hover {
-  background-color: #e55a4e;
+  background-color: #e67e00;  /* Darker accent orange on hover */
 }
 
 .btn-outline {
