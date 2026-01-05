@@ -58,8 +58,8 @@ export default function LoginPage() {
         // Redirect to OTP verification for 2FA
         router.push(`/auth/verify?email=${encodeURIComponent(formData.email)}&type=2fa`);
       } else {
-        // Successful login, redirect to home or dashboard
-        router.push('/');
+        // Successful login, redirect to dashboard
+        router.push('/dashboard');
         router.refresh();
       }
     } catch (err) {
