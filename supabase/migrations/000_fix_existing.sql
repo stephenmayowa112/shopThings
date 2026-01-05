@@ -88,17 +88,29 @@ CREATE TABLE IF NOT EXISTS profiles (
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO profiles (id, email, full_name, avatar_url)
+    INSERT INTO profiles (id, email, full_name, avatar_url, role)
     VALUES (
         NEW.id,
-        NEW.email,
-        COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name'),
-        NEW.raw_user_meta_data->>'avatar_url'
+        COALESCE(NEW.email, NEW.id::text || '@placeholder.local'),
+        COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', 'User'),
+        NEW.raw_user_meta_data->>'avatar_url',
+        'customer'::user_role
     )
-    ON CONFLICT (id) DO NOTHING;
+    ON CONFLICT (id) DO UPDATE SET
+        email = EXCLUDED.email,
+        full_name = COALESCE(EXCLUDED.full_name, profiles.full_name),
+        avatar_url = COALESCE(EXCLUDED.avatar_url, profiles.avatar_url);
     RETURN NEW;
+EXCEPTION
+    WHEN OTHERS THEN
+        -- Log error but don't block user creation
+        RAISE WARNING 'Failed to create profile for user %: %', NEW.id, SQLERRM;
+        RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+-- Grant execute permission to the function
+ALTER FUNCTION handle_new_user() OWNER TO postgres;
 
 -- ============================================
 -- 5. ENSURE TRIGGER EXISTS ON AUTH.USERS
@@ -107,6 +119,13 @@ DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+
+-- ============================================
+-- 5b. ALLOW SERVICE ROLE TO INSERT INTO PROFILES
+-- ============================================
+GRANT INSERT ON profiles TO service_role;
+GRANT INSERT ON profiles TO authenticated;
+GRANT ALL ON profiles TO postgres;
 
 -- ============================================
 -- 6. ENSURE RLS IS ENABLED ON PROFILES
