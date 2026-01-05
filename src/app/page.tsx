@@ -5,10 +5,8 @@ import { Button } from '@/components/ui';
 
 // Featured categories - only 4 to match mockup
 const FEATURED_CATEGORIES = [
-  { name: 'African Fashion', slug: 'african-fashion', image: '/images/categories/african-fashion.jpg', count: 1250 },
-  { name: 'Art & Sculptures', slug: 'art-sculptures', image: '/images/categories/art-sculptures.jpg', count: 890 },
-  { name: 'Home Decor', slug: 'home-decor', image: '/images/categories/home-decor.jpg', count: 654 },
-  { name: 'Gourmet Foods', slug: 'gourmet-foods', image: '/images/categories/gourmet-foods.jpg', count: 432 },
+  { name: 'Global Connection', slug: 'global-connection', image: '/images/categories/globalConnection.png', count: 1250 },
+  { name: 'Payment & Logistics', slug: 'payment-logistics', image: '/images/categories/payment&logistics.png', count: 890 },
 ];
 
 // Verified sellers - 3 to match mockup
@@ -20,10 +18,9 @@ const VERIFIED_SELLERS = [
 
 // Curated collections - 4 to match mockup
 const CURATED_COLLECTIONS = [
-  { name: 'Diaspora Fashion Edit', slug: 'diaspora-fashion', image: '/images/collections/diaspora-fashion.jpg' },
-  { name: 'Afro-Caribbean Vibes', slug: 'afro-caribbean', image: '/images/collections/afro-caribbean.jpg' },
-  { name: 'The Sahel Collection', slug: 'sahel', image: '/images/collections/sahel.jpg' },
-  { name: 'East African Innovations', slug: 'east-africa', image: '/images/collections/east-africa.jpg' },
+  { name: 'Fashion', slug: 'fashion', image: '/images/collections/fasion.png' },
+  { name: 'Home & Art', slug: 'home-art', image: '/images/collections/home&art.png' },
+  { name: 'Skincare', slug: 'skincare', image: '/images/collections/skincare.png' },
 ];
 
 
@@ -33,8 +30,8 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative h-[500px] md:h-[600px] overflow-hidden">
         <Image 
-          src="/images/hero/african-marketplace.jpg" 
-          alt="Vibrant African marketplace"
+          src="/images/hero/herosection1.png" 
+          alt="Marketplace hero visual"
           fill
           className="object-cover"
           priority
@@ -110,7 +107,7 @@ export default function Home() {
             </h2>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
             {FEATURED_CATEGORIES.map((category) => (
               <Link
                 key={category.slug}
@@ -185,7 +182,7 @@ export default function Home() {
             </h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {CURATED_COLLECTIONS.map((collection) => (
               <Link 
                 key={collection.slug}
@@ -209,8 +206,16 @@ export default function Home() {
       </section>
 
       {/* Fresh Finds Section */}
-      <section className="py-16 px-4 bg-muted">
-        <div className="max-w-7xl mx-auto text-center">
+      <section className="relative py-16 px-4 bg-muted overflow-hidden">
+        <Image 
+          src="/images/hero/herosection2.png"
+          alt="Lifestyle spotlight"
+          fill
+          className="object-cover opacity-40"
+          priority={false}
+        />
+        <div className="absolute inset-0 bg-muted/80" />
+        <div className="relative max-w-7xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary mb-4">
             Fresh Finds, Just For You
           </h2>
