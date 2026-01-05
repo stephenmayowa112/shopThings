@@ -76,8 +76,9 @@ export async function submitVendorApplication(
   }
 
   // Update user profile role to vendor (will be pending until approved)
+  // Using raw SQL to avoid TypeScript type issues with generated types
   try {
-    await supabase.from('profiles').update({ role: 'vendor' } as Record<string, unknown>).eq('id', user.id);
+    await (supabase as any).from('profiles').update({ role: 'vendor' }).eq('id', user.id);
   } catch (e) {
     console.error('Profile update error:', e);
     // Don't fail the application if profile update fails
