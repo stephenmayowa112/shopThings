@@ -51,34 +51,34 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="bg-primary text-white">
+    <footer className="bg-gradient-to-b from-primary to-primary/95 text-white">
       {/* Main footer content */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
           {/* Brand section */}
           <div className="lg:col-span-1">
-            <Link href="/" className="inline-block mb-4">
+            <Link href="/" className="inline-block mb-5 group">
               <Image
                 src="/images/logo.jpeg"
                 alt="ShopThings"
                 width={140}
                 height={40}
-                className="h-10 w-auto brightness-0 invert"
+                className="h-10 w-auto brightness-0 invert group-hover:scale-105 transition-transform duration-300"
               />
             </Link>
-            <p className="text-white/80 text-sm mb-6">
+            <p className="text-white/75 text-sm mb-8 leading-relaxed">
               Discover the Spirit of Africa. Authentic crafts, fashion, and art from verified sellers across the continent.
             </p>
             
             {/* Social links */}
-            <div className="flex space-x-4">
+            <div className="flex space-x-3">
               {SOCIAL_LINKS.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 bg-white/10 rounded-full hover:bg-secondary transition-colors"
+                  className="p-2.5 bg-white/10 rounded-xl hover:bg-secondary hover:scale-110 transition-all duration-200"
                   aria-label={social.label}
                 >
                   <social.icon className="w-5 h-5" />
@@ -89,13 +89,13 @@ export default function Footer() {
           
           {/* Links sections */}
           <div>
-            <h3 className="font-heading font-semibold mb-4">Shop</h3>
-            <ul className="space-y-2">
+            <h3 className="font-heading font-semibold mb-5 text-lg">Shop</h3>
+            <ul className="space-y-3">
               {FOOTER_LINKS.shop.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-white/80 hover:text-secondary transition-colors text-sm"
+                    className="text-white/70 hover:text-secondary transition-colors duration-200 text-sm inline-block"
                   >
                     {link.label}
                   </Link>
@@ -105,13 +105,13 @@ export default function Footer() {
           </div>
           
           <div>
-            <h3 className="font-heading font-semibold mb-4">My Account</h3>
-            <ul className="space-y-2">
+            <h3 className="font-heading font-semibold mb-5 text-lg">My Account</h3>
+            <ul className="space-y-3">
               {FOOTER_LINKS.account.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-white/80 hover:text-secondary transition-colors text-sm"
+                    className="text-white/70 hover:text-secondary transition-colors duration-200 text-sm inline-block"
                   >
                     {link.label}
                   </Link>
@@ -121,13 +121,13 @@ export default function Footer() {
           </div>
           
           <div>
-            <h3 className="font-heading font-semibold mb-4">Sell With Us</h3>
-            <ul className="space-y-2">
+            <h3 className="font-heading font-semibold mb-5 text-lg">Sell With Us</h3>
+            <ul className="space-y-3">
               {FOOTER_LINKS.vendor.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-white/80 hover:text-secondary transition-colors text-sm"
+                    className="text-white/70 hover:text-secondary transition-colors duration-200 text-sm inline-block"
                   >
                     {link.label}
                   </Link>
@@ -137,13 +137,13 @@ export default function Footer() {
           </div>
           
           <div>
-            <h3 className="font-heading font-semibold mb-4">Help & Support</h3>
-            <ul className="space-y-2">
+            <h3 className="font-heading font-semibold mb-5 text-lg">Help & Support</h3>
+            <ul className="space-y-3">
               {FOOTER_LINKS.support.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-white/80 hover:text-secondary transition-colors text-sm"
+                    className="text-white/70 hover:text-secondary transition-colors duration-200 text-sm inline-block"
                   >
                     {link.label}
                   </Link>
@@ -152,19 +152,19 @@ export default function Footer() {
             </ul>
             
             {/* Contact info */}
-            <div className="mt-6 space-y-2">
+            <div className="mt-8 space-y-3">
               <a
                 href="mailto:support@shopthings.africa"
-                className="flex items-center text-sm text-white/80 hover:text-secondary transition-colors"
+                className="flex items-center text-sm text-white/70 hover:text-secondary transition-colors duration-200 group"
               >
-                <Mail className="w-4 h-4 mr-2" />
+                <Mail className="w-4 h-4 mr-2.5 group-hover:scale-110 transition-transform" />
                 support@shopthings.africa
               </a>
               <a
                 href="tel:+2341234567890"
-                className="flex items-center text-sm text-white/80 hover:text-secondary transition-colors"
+                className="flex items-center text-sm text-white/70 hover:text-secondary transition-colors duration-200 group"
               >
-                <Phone className="w-4 h-4 mr-2" />
+                <Phone className="w-4 h-4 mr-2.5 group-hover:scale-110 transition-transform" />
                 +234 123 456 7890
               </a>
             </div>
@@ -174,23 +174,27 @@ export default function Footer() {
       
       {/* Newsletter section */}
       <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 py-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-              <h3 className="font-heading font-semibold mb-1">Stay Updated</h3>
-              <p className="text-white/80 text-sm">
+              <h3 className="font-heading font-semibold mb-2 text-lg">Stay Updated</h3>
+              <p className="text-white/70 text-sm">
                 Subscribe to get special offers, free giveaways, and new arrivals.
               </p>
             </div>
-            <form className="flex w-full md:w-auto gap-2">
+            <form className="flex w-full md:w-auto gap-3">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="px-4 py-2.5 rounded-full bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent w-full md:w-64"
+                className="px-5 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-white/50 
+                  focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary focus:bg-white/15
+                  transition-all duration-200 w-full md:w-72"
               />
               <button
                 type="submit"
-                className="px-6 py-2.5 bg-secondary text-white rounded-full font-medium hover:bg-secondary/90 transition-colors whitespace-nowrap"
+                className="px-7 py-3 bg-secondary text-white rounded-xl font-medium 
+                  hover:bg-secondary/90 hover:shadow-lg hover:shadow-secondary/20 
+                  active:scale-[0.98] transition-all duration-200 whitespace-nowrap"
               >
                 Subscribe
               </button>
@@ -200,18 +204,18 @@ export default function Footer() {
       </div>
       
       {/* Bottom bar */}
-      <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/60">
+      <div className="border-t border-white/10 bg-black/10">
+        <div className="max-w-7xl mx-auto px-4 py-5">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/50">
             <p>© {currentYear} ShopThings Africa. All rights reserved.</p>
-            <div className="flex items-center space-x-6">
-              <Link href="/privacy" className="hover:text-secondary transition-colors">
+            <div className="flex items-center space-x-8">
+              <Link href="/privacy" className="hover:text-secondary transition-colors duration-200">
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="hover:text-secondary transition-colors">
+              <Link href="/terms" className="hover:text-secondary transition-colors duration-200">
                 Terms of Service
               </Link>
-              <Link href="/cookies" className="hover:text-secondary transition-colors">
+              <Link href="/cookies" className="hover:text-secondary transition-colors duration-200">
                 Cookie Policy
               </Link>
             </div>

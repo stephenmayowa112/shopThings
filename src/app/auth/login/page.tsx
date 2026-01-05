@@ -82,21 +82,24 @@ export default function LoginPage() {
   };
 
   return (
-    <div>
-      <h1 className="text-2xl font-heading font-bold text-primary mb-2">
+    <div className="animate-fade-in">
+      <h1 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-2">
         Welcome back
       </h1>
-      <p className="text-muted-foreground mb-6">
+      <p className="text-muted-foreground mb-8">
         Sign in to your ShopThings account
       </p>
       
       {error && (
-        <div className="mb-4 p-3 bg-error/10 border border-error/20 rounded-lg text-error text-sm">
-          {error}
+        <div className="mb-6 p-4 bg-error/10 border border-error/20 rounded-xl text-error text-sm flex items-start gap-3">
+          <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+          </svg>
+          <span>{error}</span>
         </div>
       )}
       
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <Input
           label="Email Address"
           name="email"
@@ -117,12 +120,13 @@ export default function LoginPage() {
           value={formData.password}
           onChange={handleChange}
           error={fieldErrors.password}
-          leftIcon={<Lock className="w-5 h-5" />}
+          leftIcon={<Lock className="w-5 h-5" />}}
           rightIcon={
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="focus:outline-none"
+              className="focus:outline-none hover:text-foreground transition-colors"
+              tabIndex={-1}
             >
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
@@ -139,7 +143,7 @@ export default function LoginPage() {
           />
           <Link
             href="/auth/forgot-password"
-            className="text-sm text-secondary hover:underline"
+            className="text-sm text-secondary hover:text-secondary/80 font-medium transition-colors"
           >
             Forgot password?
           </Link>
@@ -151,15 +155,16 @@ export default function LoginPage() {
           fullWidth
           size="lg"
           isLoading={isLoading}
+          className="mt-2"
         >
           Sign In
         </Button>
       </form>
       
       {/* Divider */}
-      <div className="relative my-6">
+      <div className="relative my-8">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border"></div>
+          <div className="w-full border-t border-border/70"></div>
         </div>
         <div className="relative flex justify-center text-sm">
           <span className="px-4 bg-background text-muted-foreground">
@@ -169,7 +174,7 @@ export default function LoginPage() {
       </div>
       
       {/* OAuth Options */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-4">
         <button 
           type="button"
           onClick={async () => {
@@ -182,7 +187,9 @@ export default function LoginPage() {
             }
           }}
           disabled={isGoogleLoading}
-          className="flex items-center justify-center space-x-2 px-4 py-2.5 border border-border rounded-lg hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center justify-center gap-3 px-4 py-3 border border-border rounded-xl 
+            hover:bg-muted/50 hover:border-border/80 transition-all duration-200 
+            disabled:opacity-50 disabled:cursor-not-allowed group"
         >
           {isGoogleLoading ? (
             <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
@@ -206,20 +213,21 @@ export default function LoginPage() {
               />
             </svg>
           )}
-          <span className="font-medium text-sm">Google</span>
+          <span className="font-medium text-sm group-hover:text-foreground transition-colors">Google</span>
         </button>
         
-        <button className="flex items-center justify-center space-x-2 px-4 py-2.5 border border-border rounded-lg hover:bg-muted transition-colors">
+        <button className="flex items-center justify-center gap-3 px-4 py-3 border border-border rounded-xl 
+          hover:bg-muted/50 hover:border-border/80 transition-all duration-200 group">
           <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
             <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
           </svg>
-          <span className="font-medium text-sm">Apple</span>
+          <span className="font-medium text-sm group-hover:text-foreground transition-colors">Apple</span>
         </button>
       </div>
       
-      <p className="mt-6 text-center text-sm text-muted-foreground">
+      <p className="mt-8 text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{' '}
-        <Link href="/auth/signup" className="text-secondary font-medium hover:underline">
+        <Link href="/auth/signup" className="text-secondary font-semibold hover:text-secondary/80 transition-colors">
           Sign up
         </Link>
       </p>

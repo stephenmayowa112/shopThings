@@ -53,58 +53,64 @@ export default async function VendorPendingPage() {
     : 'N/A';
 
   return (
-    <div className="min-h-screen bg-muted flex items-center justify-center py-12 px-4">
-      <div className="max-w-lg w-full">
-        <div className="bg-white rounded-2xl p-8 border border-border text-center">
+    <div className="min-h-screen bg-gradient-to-b from-muted/50 to-muted flex items-center justify-center py-12 px-4">
+      <div className="max-w-lg w-full animate-fade-in">
+        <div className="bg-white rounded-3xl p-10 border border-border/50 shadow-xl shadow-black/5 text-center">
           {/* Icon */}
-          <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Clock className="w-10 h-10 text-yellow-600" />
+          <div className="w-24 h-24 bg-gradient-to-br from-amber-100 to-amber-50 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg shadow-amber-100">
+            <Clock className="w-12 h-12 text-amber-600" />
           </div>
 
           {/* Title */}
-          <h1 className="text-2xl font-heading font-bold text-primary mb-2">
+          <h1 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-3">
             Application Under Review
           </h1>
-          <p className="text-muted-foreground mb-6">
+          <p className="text-muted-foreground mb-8 text-lg">
             Thank you for applying to sell on ShopThings!
           </p>
 
           {/* Store Info Card */}
-          <div className="bg-muted rounded-xl p-4 mb-6 text-left">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center">
-                <Store className="w-5 h-5 text-secondary" />
+          <div className="bg-gradient-to-br from-muted/70 to-muted rounded-2xl p-5 mb-8 text-left">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-secondary to-secondary/70 rounded-xl flex items-center justify-center shadow-lg shadow-secondary/20">
+                <Store className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="font-semibold text-foreground">{(vendor as any)?.store_name}</p>
-                <p className="text-xs text-muted-foreground">Applied on {applicationDate}</p>
+                <p className="font-semibold text-foreground text-lg">{(vendor as any)?.store_name}</p>
+                <p className="text-sm text-muted-foreground">Applied on {applicationDate}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" />
-              <span>Status: Pending Review</span>
+            <div className="flex items-center gap-2.5 text-sm text-muted-foreground bg-white/60 rounded-lg px-3 py-2">
+              <div className="w-2.5 h-2.5 bg-amber-500 rounded-full animate-pulse" />
+              <span className="font-medium">Status: Pending Review</span>
             </div>
           </div>
 
           {/* What's Next */}
-          <div className="text-left mb-6">
-            <h2 className="font-semibold text-foreground mb-3">What happens next?</h2>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-muted-foreground">
+          <div className="text-left mb-8">
+            <h2 className="font-heading font-semibold text-foreground mb-4 text-lg">What happens next?</h2>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-4">
+                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <CheckCircle className="w-5 h-5 text-green-600" />
+                </div>
+                <span className="text-muted-foreground pt-1">
                   Our team will review your application within 1-3 business days
                 </span>
               </li>
-              <li className="flex items-start gap-3">
-                <Mail className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-muted-foreground">
-                  You&apos;ll receive an email at <strong>{(profile as any)?.email}</strong> once your application is approved
+              <li className="flex items-start gap-4">
+                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Mail className="w-5 h-5 text-blue-600" />
+                </div>
+                <span className="text-muted-foreground pt-1">
+                  You&apos;ll receive an email at <strong className="text-foreground">{(profile as any)?.email}</strong> once your application is approved
                 </span>
               </li>
-              <li className="flex items-start gap-3">
-                <Store className="w-5 h-5 text-secondary flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-muted-foreground">
+              <li className="flex items-start gap-4">
+                <div className="w-8 h-8 bg-secondary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Store className="w-5 h-5 text-secondary" />
+                </div>
+                <span className="text-muted-foreground pt-1">
                   After approval, you can start adding products and selling immediately
                 </span>
               </li>
@@ -114,20 +120,20 @@ export default async function VendorPendingPage() {
           {/* Actions */}
           <div className="space-y-3">
             <Link href="/dashboard" className="block">
-              <Button variant="primary" fullWidth>
-                <ArrowLeft className="w-4 h-4 mr-2" />
+              <Button variant="primary" fullWidth size="lg">
+                <ArrowLeft className="w-5 h-5 mr-2" />
                 Back to Dashboard
               </Button>
             </Link>
             <Link href="/help/seller-faq" className="block">
-              <Button variant="outline" fullWidth>
+              <Button variant="ghost" fullWidth>
                 Seller FAQ
               </Button>
             </Link>
           </div>
 
           {/* Contact */}
-          <p className="text-xs text-muted-foreground mt-6">
+          <p className="text-sm text-muted-foreground mt-8">
             Questions? Contact us at{' '}
             <a href="mailto:sellers@shopthings.africa" className="text-secondary hover:underline">
               sellers@shopthings.africa

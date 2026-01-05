@@ -164,56 +164,65 @@ export default function VendorApplicationPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-muted py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-muted/50 to-muted py-10 px-4">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-10">
           <Link
             href="/dashboard"
-            className="inline-flex items-center text-muted-foreground hover:text-foreground mb-4"
+            className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors duration-200 mb-6 group"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
             Back to Dashboard
           </Link>
-          <h1 className="text-2xl md:text-3xl font-heading font-bold text-primary">
-            Become a Seller
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Complete your seller application to start selling on ShopThings
-          </p>
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 bg-gradient-to-br from-secondary to-secondary/70 rounded-2xl flex items-center justify-center shadow-lg shadow-secondary/20">
+              <Store className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-heading font-bold text-foreground">
+                Become a Seller
+              </h1>
+              <p className="text-muted-foreground mt-0.5">
+                Complete your seller application to start selling on ShopThings
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Progress Steps */}
-        <div className="bg-white rounded-xl p-4 mb-6 border border-border">
+        <div className="bg-white rounded-2xl p-6 mb-8 border border-border/50 shadow-sm">
           <div className="flex items-center justify-between">
             {steps.map((step, index) => (
               <div key={step.number} className="flex items-center">
-                <div
-                  className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors ${
-                    currentStep >= step.number
-                      ? 'bg-secondary border-secondary text-white'
-                      : 'border-border text-muted-foreground'
-                  }`}
-                >
-                  {currentStep > step.number ? (
-                    <CheckCircle className="w-5 h-5" />
+                <div className="flex flex-col items-center">
+                  <div
+                    className={`flex items-center justify-center w-12 h-12 rounded-xl border-2 transition-all duration-300 ${
+                      currentStep >= step.number
+                        ? 'bg-gradient-to-br from-secondary to-secondary/80 border-secondary text-white shadow-lg shadow-secondary/20'
+                        : 'border-border/70 text-muted-foreground bg-muted/30'
+                    }`}
+                  >
+                    {currentStep > step.number ? (
+                      <CheckCircle className="w-6 h-6" />
                   ) : (
                     <step.icon className="w-5 h-5" />
                   )}
+                  </div>
+                  <span
+                    className={`mt-2 text-xs font-medium hidden sm:block transition-colors duration-200 ${
+                      currentStep >= step.number
+                        ? 'text-foreground'
+                        : 'text-muted-foreground'
+                    }`}
+                  >
+                    {step.title}
+                  </span>
                 </div>
-                <span
-                  className={`ml-2 text-sm font-medium hidden sm:block ${
-                    currentStep >= step.number
-                      ? 'text-foreground'
-                      : 'text-muted-foreground'
-                  }`}
-                >
-                  {step.title}
-                </span>
                 {index < steps.length - 1 && (
                   <div
-                    className={`w-8 sm:w-16 h-0.5 mx-2 ${
-                      currentStep > step.number ? 'bg-secondary' : 'bg-border'
+                    className={`flex-1 h-1 mx-3 rounded-full transition-colors duration-300 ${
+                      currentStep > step.number ? 'bg-secondary' : 'bg-border/50'
                     }`}
                   />
                 )}
@@ -224,21 +233,27 @@ export default function VendorApplicationPage() {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-error/10 border border-error/20 text-error rounded-lg p-4 mb-6">
-            {error}
+          <div className="bg-error/10 border border-error/20 text-error rounded-xl p-4 mb-6 flex items-start gap-3">
+            <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            <span>{error}</span>
           </div>
         )}
 
         {/* Form Content */}
-        <div className="bg-white rounded-xl p-6 border border-border">
+        <div className="bg-white rounded-2xl p-8 border border-border/50 shadow-sm">
           {/* Step 1: Store Information */}
           {currentStep === 1 && (
-            <div className="space-y-6">
+            <div className="space-y-6 animate-fade-in">
               <div>
-                <h2 className="text-lg font-semibold text-foreground mb-4">
+                <h2 className="text-xl font-heading font-semibold text-foreground mb-2">
                   Tell us about your store
                 </h2>
-                <div className="space-y-4">
+                <p className="text-muted-foreground text-sm mb-6">
+                  This information will be displayed on your store page
+                </p>
+                <div className="space-y-5">
                   <Input
                     label="Store Name"
                     name="storeName"
@@ -248,8 +263,9 @@ export default function VendorApplicationPage() {
                     required
                   />
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-1">
+                    <label className="block text-sm font-medium text-foreground mb-2">
                       Store Description
+                      <span className="text-primary ml-1">*</span>
                     </label>
                     <textarea
                       name="storeDescription"
@@ -257,10 +273,12 @@ export default function VendorApplicationPage() {
                       value={formData.storeDescription}
                       onChange={handleInputChange}
                       rows={4}
-                      className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary/50 resize-none"
+                      className="w-full px-4 py-3 border border-border rounded-lg bg-background 
+                        focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary 
+                        transition-all duration-200 resize-none placeholder:text-muted-foreground/60"
                       required
                     />
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-muted-foreground mt-2">
                       Minimum 20 characters ({formData.storeDescription.length}/20)
                     </p>
                   </div>
