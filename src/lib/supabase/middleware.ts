@@ -47,8 +47,8 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Protected routes
-  const protectedRoutes = ['/dashboard', '/vendor', '/admin', '/checkout', '/orders', '/wishlist', '/profile'];
+  // Protected routes - require authentication
+  const protectedRoutes = ['/dashboard', '/checkout', '/orders', '/wishlist', '/profile', '/account', '/messages'];
   const isProtectedRoute = protectedRoutes.some(route => 
     request.nextUrl.pathname.startsWith(route)
   );
@@ -61,17 +61,100 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Vendor-only routes
-  const vendorRoutes = ['/vendor'];
-  const isVendorRoute = vendorRoutes.some(route => 
+  // Vendor application route - requires auth but NOT vendor role
+  if (request.nextUrl.pathname.startsWith('/vendor/apply')) {
+    if (!user) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/auth/login';
+      url.searchParams.set('redirectTo', '/vendor/apply');
+      return NextResponse.redirect(url);
+    }
+    // Allow access to vendor application page
+    return supabaseResponse;
+  }
+
+  // Vendor pending page - requires auth
+  if (request.nextUrl.pathname.startsWith('/vendor/pending')) {
+    if (!user) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/auth/login';
+      url.searchParams.set('redirectTo', '/vendor/pending');
+      return NextResponse.redirect(url);
+    }
+    // Allow access - the page will handle status checking
+    return supabaseResponse;
+  }
+
+  // Vendor dashboard routes - requires approved vendor
+  const vendorDashboardRoutes = ['/vendor/dashboard', '/vendor/products', '/vendor/orders', '/vendor/wallet', '/vendor/settings'];
+  const isVendorDashboardRoute = vendorDashboardRoutes.some(route => 
     request.nextUrl.pathname.startsWith(route)
   );
+
+  if (isVendorDashboardRoute) {
+    if (!user) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/auth/login';
+      url.searchParams.set('redirectTo', request.nextUrl.pathname);
+      return NextResponse.redirect(url);
+    }
+    
+    // Check if user is an approved vendor
+    const { data: vendor } = await supabase
+      .from('vendors')
+      .select('status')
+      .eq('user_id', user.id)
+      .single();
+
+    if (!vendor) {
+      // No vendor record - redirect to apply
+      const url = request.nextUrl.clone();
+      url.pathname = '/vendor/apply';
+      return NextResponse.redirect(url);
+    }
+
+    if (vendor.status === 'pending') {
+      // Pending vendor - redirect to pending page
+      const url = request.nextUrl.clone();
+      url.pathname = '/vendor/pending';
+      return NextResponse.redirect(url);
+    }
+
+    if (vendor.status !== 'approved') {
+      // Rejected or suspended - redirect to dashboard with message
+      const url = request.nextUrl.clone();
+      url.pathname = '/dashboard';
+      return NextResponse.redirect(url);
+    }
+  }
 
   // Admin-only routes
   const adminRoutes = ['/admin'];
   const isAdminRoute = adminRoutes.some(route => 
     request.nextUrl.pathname.startsWith(route)
   );
+
+  if (isAdminRoute) {
+    if (!user) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/auth/login';
+      url.searchParams.set('redirectTo', request.nextUrl.pathname);
+      return NextResponse.redirect(url);
+    }
+
+    // Check if user is admin
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (profile?.role !== 'admin') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/dashboard';
+      return NextResponse.redirect(url);
+    }
+  }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
   // creating a new response object with NextResponse.next() make sure to:
