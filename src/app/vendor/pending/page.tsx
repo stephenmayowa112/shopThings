@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { Clock, CheckCircle, Mail, ArrowLeft, Store } from 'lucide-react';
 import { Button } from '@/components/ui';
+import DashboardFooter from '@/components/layout/DashboardFooter';
 
 export const metadata = {
   title: 'Application Pending | ShopThings',
@@ -141,6 +142,8 @@ export default async function VendorPendingPage() {
           </p>
         </div>
       </div>
+      
+      <DashboardFooter />
     </div>
   );
 }
