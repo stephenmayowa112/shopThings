@@ -76,13 +76,10 @@ export async function submitVendorApplication(
   }
 
   // Update user profile role to vendor (will be pending until approved)
-  const { error: profileError } = await supabase
-    .from('profiles')
-    .update({ role: 'vendor' } as any)
-    .eq('id', user.id);
-
-  if (profileError) {
-    console.error('Profile update error:', profileError);
+  try {
+    await supabase.from('profiles').update({ role: 'vendor' } as Record<string, unknown>).eq('id', user.id);
+  } catch (e) {
+    console.error('Profile update error:', e);
     // Don't fail the application if profile update fails
   }
 
