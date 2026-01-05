@@ -51,7 +51,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="bg-gradient-to-b from-primary to-primary/95 text-white">
+    <footer className="main-footer bg-gradient-to-b from-primary to-primary/95 text-white">
       {/* Main footer content */}
       <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
@@ -63,7 +63,7 @@ export default function Footer() {
                 alt="ShopThings"
                 width={140}
                 height={40}
-                className="h-10 w-auto brightness-0 invert group-hover:scale-105 transition-transform duration-300"
+                className="h-10 w-auto group-hover:scale-105 transition-transform duration-300"
               />
             </Link>
             <p className="text-white/75 text-sm mb-8 leading-relaxed">

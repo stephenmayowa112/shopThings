@@ -82,6 +82,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Hide main footer on dashboard pages */
+body.dashboard-page footer.main-footer {
+  display: none !important;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-weight: 600;
