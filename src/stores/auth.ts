@@ -64,9 +64,34 @@ export const useAuthStore = create<AuthState>()(
     {
       name: 'shopthings-auth',
       partialize: (state) => ({
-        // Only persist the user ID for rehydration, not the full user object
-        // This is for security - we'll refetch user data on mount
+        // Persist minimal safe fields to avoid guest flashes after navigation
         isAuthenticated: state.isAuthenticated,
+        user: state.user
+          ? {
+              id: state.user.id,
+              email: state.user.email,
+              app_metadata: state.user.app_metadata,
+              user_metadata: state.user.user_metadata,
+              aud: state.user.aud,
+              created_at: state.user.created_at,
+              role: state.user.role,
+              confirmed_at: state.user.confirmed_at,
+              last_sign_in_at: state.user.last_sign_in_at,
+              phone: state.user.phone,
+              identities: state.user.identities,
+              updated_at: state.user.updated_at,
+            }
+          : null,
+        profile: state.profile
+          ? {
+              id: state.profile.id,
+              full_name: state.profile.full_name,
+              avatar_url: state.profile.avatar_url,
+              role: state.profile.role,
+              phone: state.profile.phone,
+              created_at: state.profile.created_at,
+            }
+          : null,
       }),
     }
   )

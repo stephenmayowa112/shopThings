@@ -14,6 +14,7 @@ import {
   ChevronDown,
   Globe,
   LogOut,
+  LayoutDashboard,
   Settings,
   Package,
   Store,
@@ -49,6 +50,13 @@ export default function Header() {
   }, [profile?.full_name, user?.email]);
 
   const userRole = profile?.role;
+
+  // Choose the correct dashboard path per role
+  const dashboardHref = userRole === 'admin'
+    ? '/admin'
+    : userRole === 'vendor'
+      ? '/vendor/dashboard'
+      : '/dashboard';
 
   // Prevent hydration mismatch for currency
   React.useEffect(() => {
@@ -179,6 +187,18 @@ export default function Header() {
                 </span>
               )}
             </Link>
+
+            {/* Dashboard shortcut (only when authenticated) */}
+            {mounted && isAuthenticated && (user || profile) && (
+              <Link
+                href={dashboardHref}
+                className="p-2.5 hidden sm:flex rounded-lg hover:bg-muted/80 transition-all duration-200 items-center gap-2"
+                aria-label="Dashboard"
+              >
+                <LayoutDashboard className="w-5 h-5" />
+                <span className="text-sm font-medium hidden lg:inline">Dashboard</span>
+              </Link>
+            )}
             
             {/* User menu */}
             <div className="relative">
@@ -207,7 +227,12 @@ export default function Header() {
                     onClick={() => setIsUserMenuOpen(false)}
                   />
                   <div className="absolute right-0 top-full mt-2 w-60 bg-white rounded-xl shadow-xl border border-border/50 z-20 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-                    {isAuthenticated && (profile || user) ? (
+                    {isLoading ? (
+                      <div className="px-4 py-4 border-b border-border/50 bg-muted/30">
+                        <div className="h-4 w-32 bg-muted animate-pulse rounded" />
+                        <div className="h-3 w-40 bg-muted animate-pulse rounded mt-2" />
+                      </div>
+                    ) : isAuthenticated && (profile || user) ? (
                       <>
                         {/* User info */}
                         <div className="px-4 py-4 border-b border-border/50 bg-muted/30">
