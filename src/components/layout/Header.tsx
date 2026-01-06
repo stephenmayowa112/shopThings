@@ -166,7 +166,7 @@ export default function Header() {
               aria-label="Cart"
             >
               <ShoppingCart className="w-5 h-5 group-hover:text-primary transition-colors duration-200" />
-              {cartItemCount > 0 && (
+              {mounted && cartItemCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-accent text-white text-xs font-bold rounded-full min-w-[20px] h-5 px-1 flex items-center justify-center shadow-sm">
                   {cartItemCount > 99 ? '99+' : cartItemCount}
                 </span>
