@@ -104,7 +104,7 @@ export async function updateSession(request: NextRequest) {
       .from('vendors')
       .select('status')
       .eq('user_id', user.id)
-      .single();
+      .single<{ status: 'pending' | 'approved' | 'rejected' | 'suspended' | null }>();
 
     if (!vendor) {
       // No vendor record - redirect to apply
@@ -113,14 +113,16 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    if (vendor.status === 'pending') {
+    const vendorStatus = vendor?.status ?? null;
+
+    if (vendorStatus === 'pending') {
       // Pending vendor - redirect to pending page
       const url = request.nextUrl.clone();
       url.pathname = '/vendor/pending';
       return NextResponse.redirect(url);
     }
 
-    if (vendor.status !== 'approved') {
+    if (vendorStatus !== 'approved') {
       // Rejected or suspended - redirect to dashboard with message
       const url = request.nextUrl.clone();
       url.pathname = '/dashboard';
