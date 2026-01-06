@@ -2,9 +2,9 @@
 
 import { use } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowLeft,
-  Package,
   Truck,
   CheckCircle,
   MapPin,
@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { useCurrencyStore } from '@/stores';
+import { getPlaceholderImage } from '@/lib/placeholders';
 
 const MOCK_ORDER = {
   id: 'ORD-1705123456789',
@@ -197,8 +198,14 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               <div className="divide-y divide-border">
                 {MOCK_ORDER.items.map((item) => (
                   <div key={item.id} className="py-4 first:pt-0 last:pb-0 flex gap-4">
-                    <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center shrink-0">
-                      <Package className="w-6 h-6 text-muted-foreground" />
+                    <div className="w-16 h-16 bg-muted rounded-lg overflow-hidden shrink-0">
+                      <Image
+                        src={getPlaceholderImage(item.id)}
+                        alt={item.name}
+                        width={64}
+                        height={64}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <div className="flex-1">
                       <Link
