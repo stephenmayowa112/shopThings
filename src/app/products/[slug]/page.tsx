@@ -16,7 +16,6 @@ import {
   Shield,
   RotateCcw,
   ChevronRight,
-  Package,
   MessageCircle,
   Copy,
   Check,
@@ -25,6 +24,7 @@ import {
 import { Button } from '@/components/ui';
 import { ProductCard } from '@/components/products';
 import { useCurrencyStore, useCartStore } from '@/stores';
+import { getProductImage, getPlaceholderImage } from '@/lib/placeholders';
 
 // WhatsApp icon component
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -272,8 +272,14 @@ export default function ProductDetailPage() {
 
             {/* Product Preview */}
             <div className="flex items-center gap-4 mb-6 p-4 bg-muted rounded-xl">
-              <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center border border-border">
-                <Package className="w-8 h-8 text-primary/20" />
+              <div className="w-16 h-16 bg-white rounded-lg overflow-hidden border border-border">
+                <Image
+                  src={getProductImage(product.images, product.id)}
+                  alt={product.name}
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium truncate">{product.name}</p>
@@ -376,9 +382,12 @@ export default function ProductDetailPage() {
           <div className="space-y-4">
             {/* Main Image */}
             <div className="relative aspect-square bg-muted rounded-xl overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Package className="w-24 h-24 text-primary/20" />
-              </div>
+              <Image
+                src={product.images[selectedImage] || getProductImage(product.images, product.id)}
+                alt={product.name}
+                fill
+                className="object-cover"
+              />
               {discountPercentage > 0 && (
                 <span className="absolute top-4 left-4 bg-accent text-white text-sm font-bold px-3 py-1 rounded-full">
                   -{discountPercentage}%
@@ -388,7 +397,7 @@ export default function ProductDetailPage() {
 
             {/* Thumbnail Gallery */}
             <div className="flex gap-3 overflow-x-auto pb-2">
-              {product.images.map((image, idx) => (
+              {(product.images.length > 0 ? product.images : [getProductImage(product.images, product.id)]).map((image, idx) => (
                 <button
                   key={idx}
                   onClick={() => setSelectedImage(idx)}
@@ -396,9 +405,13 @@ export default function ProductDetailPage() {
                     selectedImage === idx ? 'border-secondary' : 'border-border hover:border-secondary/50'
                   }`}
                 >
-                  <div className="w-full h-full bg-muted flex items-center justify-center">
-                    <Package className="w-8 h-8 text-primary/20" />
-                  </div>
+                  <Image
+                    src={image}
+                    alt={`${product.name} ${idx + 1}`}
+                    width={80}
+                    height={80}
+                    className="w-full h-full object-cover"
+                  />
                 </button>
               ))}
             </div>

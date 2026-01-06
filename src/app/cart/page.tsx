@@ -10,12 +10,12 @@ import {
   ShoppingBag,
   ArrowRight,
   Tag,
-  Package,
   Truck,
   Shield,
 } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
 import { useCartStore, useCurrencyStore } from '@/stores';
+import { getProductImage } from '@/lib/placeholders';
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, clearCart, getSubtotal } = useCartStore();
@@ -117,8 +117,14 @@ export default function CartPage() {
               >
                 {/* Product */}
                 <div className="md:col-span-6 flex gap-4">
-                  <div className="w-20 h-20 md:w-24 md:h-24 bg-muted rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
-                    <Package className="w-8 h-8 text-primary/20" />
+                  <div className="w-20 h-20 md:w-24 md:h-24 bg-muted rounded-lg overflow-hidden shrink-0">
+                    <Image
+                      src={getProductImage(item.product.images, item.product.id)}
+                      alt={item.product.name}
+                      width={96}
+                      height={96}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="flex-1">
                     <Link

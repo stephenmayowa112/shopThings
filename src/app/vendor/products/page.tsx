@@ -33,6 +33,7 @@ import {
 } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
 import { useCurrencyStore } from '@/stores';
+import { getProductImage } from '@/lib/placeholders';
 
 // Mock vendor data
 const MOCK_VENDOR = {
@@ -430,18 +431,14 @@ export default function VendorProductsPage() {
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            {product.images.length > 0 ? (
-                              <Image
-                                src={product.images[0]}
-                                alt={product.name}
-                                width={48}
-                                height={48}
-                                className="object-cover rounded-lg"
-                              />
-                            ) : (
-                              <Package className="w-5 h-5 text-gray-400" />
-                            )}
+                          <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                            <Image
+                              src={getProductImage(product.images, product.id)}
+                              alt={product.name}
+                              width={48}
+                              height={48}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
                           <div>
                             <Link

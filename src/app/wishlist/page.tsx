@@ -1,9 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { Heart, ShoppingCart, Trash2, Package, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
+import { Heart, ShoppingCart, Trash2, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { useCartStore, useCurrencyStore } from '@/stores';
+import { getPlaceholderImage } from '@/lib/placeholders';
 
 // Mock wishlist data - in a real app this would come from a store or API
 const MOCK_WISHLIST = [
@@ -148,8 +150,13 @@ export default function WishlistPage() {
             >
               {/* Image */}
               <Link href={`/products/${item.slug}`} className="block">
-                <div className="aspect-square bg-muted flex items-center justify-center relative">
-                  <Package className="w-12 h-12 text-primary/20" />
+                <div className="aspect-square bg-muted relative overflow-hidden">
+                  <Image
+                    src={getPlaceholderImage(item.id)}
+                    alt={item.name}
+                    fill
+                    className="object-cover"
+                  />
                   {!item.inStock && (
                     <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                       <span className="bg-white text-foreground text-sm font-medium px-3 py-1 rounded-full">
