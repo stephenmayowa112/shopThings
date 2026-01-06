@@ -23,7 +23,7 @@ export default function AuthLayout({
               alt="ShopThings"
               width={140}
               height={40}
-              className="h-10 w-auto brightness-0 invert group-hover:scale-105 transition-transform duration-300"
+              className="h-10 w-auto group-hover:scale-105 transition-transform duration-300"
             />
           </Link>
           
