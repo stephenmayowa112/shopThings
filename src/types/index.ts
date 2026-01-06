@@ -2,7 +2,7 @@
 export * from './database';
 
 // Currency types
-export type CurrencyCode = 'NGN' | 'USD' | 'GBP' | 'EUR' | 'GHS' | 'KES' | 'ZAR';
+export type CurrencyCode = 'NGN' | 'USD';
 
 export interface Currency {
   code: CurrencyCode;
@@ -14,11 +14,6 @@ export interface Currency {
 export const CURRENCIES: Record<CurrencyCode, Currency> = {
   NGN: { code: 'NGN', symbol: '₦', name: 'Nigerian Naira', rate: 1550.0 },
   USD: { code: 'USD', symbol: '$', name: 'US Dollar', rate: 1.0 },
-  GBP: { code: 'GBP', symbol: '£', name: 'British Pound', rate: 0.79 },
-  EUR: { code: 'EUR', symbol: '€', name: 'Euro', rate: 0.92 },
-  GHS: { code: 'GHS', symbol: 'GH₵', name: 'Ghanaian Cedi', rate: 15.5 },
-  KES: { code: 'KES', symbol: 'KSh', name: 'Kenyan Shilling', rate: 153.0 },
-  ZAR: { code: 'ZAR', symbol: 'R', name: 'South African Rand', rate: 18.5 },
 };
 
 // Navigation types
