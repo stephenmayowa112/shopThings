@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
   Search,
@@ -39,6 +40,7 @@ export default function Header() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
   
   const { currentCurrency, setCurrency, getCurrency } = useCurrencyStore();
   const cartItemCount = useCartStore((state) => state.getItemCount());
@@ -65,9 +67,10 @@ export default function Header() {
   
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      window.location.href = `/products?search=${encodeURIComponent(searchQuery)}`;
-    }
+    const query = searchQuery.trim();
+    const target = query ? `/products?search=${encodeURIComponent(query)}` : '/products';
+    setIsMobileMenuOpen(false);
+    router.push(target);
   };
 
   return (
