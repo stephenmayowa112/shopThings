@@ -134,7 +134,7 @@ export default function Header() {
                           setIsCurrencyOpen(false);
                         }}
                         className={`w-full px-4 py-3 text-left hover:bg-muted/70 transition-colors duration-150 flex items-center justify-between ${
-                          currentCurrency === currency.code ? 'bg-secondary/10 text-secondary font-medium' : ''
+                          mounted && currentCurrency === currency.code ? 'bg-secondary/10 text-secondary font-medium' : ''
                         }`}
                       >
                         <span>
@@ -402,7 +402,7 @@ export default function Header() {
                     setCurrency(currency.code);
                   }}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                    currentCurrency === currency.code
+                    mounted && currentCurrency === currency.code
                       ? 'bg-secondary text-white shadow-sm'
                       : 'bg-white hover:bg-border/50 border border-border'
                   }`}
