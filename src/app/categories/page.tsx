@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ChevronRight, Package } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
+import { getPlaceholderImage } from '@/lib/placeholders';
 
 const CATEGORIES = [
   {
@@ -115,10 +116,13 @@ export default function CategoriesPage() {
               className="group bg-white rounded-xl border border-border overflow-hidden hover:shadow-lg transition-all duration-300"
             >
               {/* Category Image */}
-              <div className="relative h-48 bg-gradient-to-br from-primary/10 to-secondary/10">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Package className="w-16 h-16 text-primary/30" />
-                </div>
+              <div className="relative h-48 bg-gradient-to-br from-primary/10 to-secondary/10 overflow-hidden">
+                <Image
+                  src={getPlaceholderImage(category.id)}
+                  alt={category.name}
+                  fill
+                  className="object-cover"
+                />
                 {/* Overlay on hover */}
                 <div className="absolute inset-0 bg-primary/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <span className="text-white font-medium flex items-center gap-2">
