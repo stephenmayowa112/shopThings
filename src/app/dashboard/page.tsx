@@ -20,6 +20,9 @@ export const metadata = {
   description: 'Your personal dashboard',
 };
 
+// Ensure the dashboard is never cached so auth redirects don't get stuck
+export const dynamic = 'force-dynamic';
+
 export default async function CustomerDashboard() {
   const supabase = await createClient();
 
