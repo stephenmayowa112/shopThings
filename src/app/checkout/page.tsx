@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowLeft,
   ArrowRight,
@@ -16,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
 import { useCartStore, useCurrencyStore } from '@/stores';
+import { getProductImage } from '@/lib/placeholders';
 
 type CheckoutStep = 'shipping' | 'payment' | 'review';
 
@@ -393,8 +395,14 @@ export default function CheckoutPage() {
                   <div className="divide-y divide-border">
                     {items.map((item) => (
                       <div key={item.id} className="py-3 flex items-center gap-4">
-                        <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center">
-                          <Package className="w-6 h-6 text-muted-foreground" />
+                        <div className="w-16 h-16 bg-muted rounded-lg overflow-hidden">
+                          <Image
+                            src={getProductImage(item.product.images, item.product.id)}
+                            alt={item.product.name}
+                            width={64}
+                            height={64}
+                            className="w-full h-full object-cover"
+                          />
                         </div>
                         <div className="flex-1">
                           <p className="font-medium">{item.product.name}</p>
