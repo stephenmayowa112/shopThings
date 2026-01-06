@@ -3,25 +3,14 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Heart, ShoppingCart, Trash2, ArrowRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui';
 import { useCartStore, useCurrencyStore } from '@/stores';
 import { getPlaceholderImage } from '@/lib/placeholders';
-
-import { useEffect } from 'react';
 // Mock wishlist data - in a real app this would come from a store or API
 const MOCK_WISHLIST = [
   {
     id: '1',
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const formatDisplayPrice = (price: number) =>
-    mounted
-      ? formatConvertedPrice(price, 'NGN')
-      : `₦${price.toLocaleString('en-NG')}`;
     productId: '1',
     name: 'Traditional Kente Cloth',
     price: 15000,
@@ -65,6 +54,16 @@ const MOCK_WISHLIST = [
 export default function WishlistPage() {
   const { addItem } = useCartStore();
   const { formatConvertedPrice } = useCurrencyStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const formatDisplayPrice = (price: number) =>
+    mounted
+      ? formatConvertedPrice(price, 'NGN')
+      : `₦${price.toLocaleString('en-NG')}`;
 
   const handleAddToCart = (item: typeof MOCK_WISHLIST[0]) => {
     addItem({
@@ -193,11 +192,11 @@ export default function WishlistPage() {
                 {/* Price */}
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-lg font-bold text-primary">
-                    {formatConvertedPrice(item.price, 'NGN')}
+                    {formatDisplayPrice(item.price)}
                   </span>
                   {item.comparePrice && (
                     <span className="text-sm text-muted-foreground line-through">
-                      {formatConvertedPrice(item.comparePrice, 'NGN')}
+                      {formatDisplayPrice(item.comparePrice)}
                     </span>
                   )}
                 </div>
