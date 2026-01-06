@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, BadgeCheck, ShoppingBag, Truck, Shield, HeartHandshake } from 'lucide-react';
+import { ArrowRight, BadgeCheck, ShoppingBag, Truck, Shield, HeartHandshake, Sparkles, Flame } from 'lucide-react';
 import { Button } from '@/components/ui';
+import ProductCard from '@/components/products/ProductCard';
 
 // Featured categories - only 4 to match mockup
 const FEATURED_CATEGORIES = [
@@ -22,6 +23,28 @@ const CURATED_COLLECTIONS = [
   { name: 'Home & Art', slug: 'home-art', image: '/images/collections/home&art.png' },
   { name: 'Skincare', slug: 'skincare', image: '/images/collections/skincare.png' },
 ];
+
+const productDefaults = {
+  currency: 'NGN',
+  images: [] as string[],
+  stock_quantity: 25,
+  compare_at_price: null as number | null,
+  is_featured: false,
+};
+
+const TRENDING_PRODUCTS = [
+  { id: 'trend-1', name: 'Ankara Midi Dress', price: 15000, average_rating: 4.8, review_count: 215, slug: 'ankara-midi-dress', vendor: { id: 'v1', store_name: 'Lagos Fashion House', is_verified: true } },
+  { id: 'trend-2', name: 'Handwoven Kente Scarf', price: 9500, average_rating: 4.7, review_count: 142, slug: 'kente-scarf', vendor: { id: 'v2', store_name: 'Accra Textiles', is_verified: true } },
+  { id: 'trend-3', name: 'Shea Butter Glow Kit', price: 7800, average_rating: 4.9, review_count: 310, slug: 'shea-butter-glow', vendor: { id: 'v3', store_name: 'Natural Ghana', is_verified: true } },
+  { id: 'trend-4', name: 'Hand-carved Ebony Mask', price: 22000, average_rating: 4.6, review_count: 98, slug: 'ebony-mask', vendor: { id: 'v4', store_name: 'Artisan Carvings', is_verified: true } },
+].map((p) => ({ ...productDefaults, ...p }));
+
+const NEW_ARRIVALS = [
+  { id: 'new-1', name: 'Bogolan Print Hoodie', price: 16500, average_rating: 4.7, review_count: 87, slug: 'bogolan-hoodie', vendor: { id: 'v5', store_name: 'Bamako Threads', is_verified: true } },
+  { id: 'new-2', name: 'Maasai Beaded Bracelet', price: 4500, average_rating: 4.5, review_count: 54, slug: 'maasai-bracelet', vendor: { id: 'v6', store_name: 'Nairobi Crafts', is_verified: true } },
+  { id: 'new-3', name: 'Roasted Ethiopian Coffee', price: 6800, average_rating: 4.8, review_count: 122, slug: 'ethiopian-coffee', vendor: { id: 'v7', store_name: 'Spice Route Delights', is_verified: true } },
+  { id: 'new-4', name: 'Tuareg Silver Pendant', price: 18500, average_rating: 4.9, review_count: 76, slug: 'tuareg-pendant', vendor: { id: 'v8', store_name: 'Sahara Metals', is_verified: true } },
+].map((p) => ({ ...productDefaults, ...p }));
 
 
 export default function Home() {
@@ -45,12 +68,54 @@ export default function Home() {
             <p className="text-lg md:text-xl mb-10 leading-relaxed text-white/90 max-w-lg">
               Explore a curated selection of authentic crafts, fashion, and art from across the continent.
             </p>
-            <Link href="/products">
-              <Button variant="secondary" size="lg" className="shadow-xl shadow-secondary/30 hover:scale-105 transition-transform">
-                Explore Now
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/products">
+                <Button variant="secondary" size="lg" className="shadow-xl shadow-secondary/30 hover:scale-105 transition-transform">
+                  Shop New Arrivals
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
+              <Link href="/vendor/register">
+                <Button variant="outline" size="lg" className="border-white/60 text-white hover:bg-white/10">
+                  Become a Vendor
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Category Grid */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground">Shop by Category</h2>
+              <p className="text-muted-foreground mt-2">Jump into the styles and stories you love</p>
+            </div>
+            <Link href="/categories" className="hidden md:inline-flex items-center text-secondary font-semibold hover:text-secondary/80">
+              View all
+              <ArrowRight className="w-4 h-4 ml-1" />
             </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
+            {[
+              { name: 'Fashion', slug: 'fashion', icon: '👗' },
+              { name: 'Home & Art', slug: 'home-art', icon: '🏺' },
+              { name: 'Skincare', slug: 'skincare', icon: '🌿' },
+              { name: 'Jewelry', slug: 'jewelry', icon: '💍' },
+              { name: 'Gourmet', slug: 'gourmet', icon: '🍯' },
+              { name: 'Accessories', slug: 'accessories', icon: '🧣' },
+            ].map((cat) => (
+              <Link
+                key={cat.slug}
+                href={`/categories/${cat.slug}`}
+                className="rounded-2xl border border-border bg-muted/50 hover:bg-white hover:border-secondary/30 transition-all duration-200 p-4 md:p-5 flex flex-col items-center text-center gap-2 shadow-sm hover:shadow-md"
+              >
+                <span className="text-2xl md:text-3xl" aria-hidden>{cat.icon}</span>
+                <p className="font-semibold text-foreground text-sm md:text-base">{cat.name}</p>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -235,6 +300,42 @@ export default function Home() {
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </Link>
+        </div>
+      </section>
+
+      {/* Trending Now */}
+      <section className="py-20 px-4 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2.5 rounded-xl bg-secondary/15 text-secondary"><Flame className="w-5 h-5" /></div>
+            <div>
+              <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground">Trending Now</h2>
+              <p className="text-muted-foreground">Hot picks customers are loving this week</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {TRENDING_PRODUCTS.map((product) => (
+              <ProductCard key={product.id} product={product as any} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* New Arrivals */}
+      <section className="py-20 px-4 bg-muted/60 border-t border-border/50">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2.5 rounded-xl bg-primary/10 text-primary"><Sparkles className="w-5 h-5" /></div>
+            <div>
+              <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground">New Arrivals</h2>
+              <p className="text-muted-foreground">Fresh drops from verified sellers</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {NEW_ARRIVALS.map((product) => (
+              <ProductCard key={product.id} product={product as any} />
+            ))}
+          </div>
         </div>
       </section>
     </>
