@@ -59,7 +59,7 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <Link href="/" className="inline-block mb-5 group">
               <Image
-                src="/images/logo.jpeg"
+                src="/images/logo.png"
                 alt="ShopThings"
                 width={140}
                 height={40}

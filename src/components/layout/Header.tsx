@@ -96,7 +96,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 transition-transform duration-200 hover:scale-[1.02]">
             <Image
-              src="/images/logo.jpeg"
+              src="/images/logo.png"
               alt="ShopThings"
               width={140}
               height={40}

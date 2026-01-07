@@ -19,7 +19,7 @@ export default function AuthLayout({
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
           <Link href="/" className="flex items-center space-x-2 group">
             <Image
-              src="/images/logo.jpeg"
+              src="/images/logo.png"
               alt="ShopThings"
               width={140}
               height={40}

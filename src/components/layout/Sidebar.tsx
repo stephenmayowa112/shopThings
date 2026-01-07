@@ -84,7 +84,7 @@ export default function Sidebar({
           <Link href="/" className="block">
             {isCollapsed ? (
               <Image
-                src="/images/logo.jpeg"
+                src="/images/logo.png"
                 alt="ShopThings"
                 width={40}
                 height={40}
@@ -92,7 +92,7 @@ export default function Sidebar({
               />
             ) : (
               <Image
-                src="/images/logo.jpeg"
+                src="/images/logo.png"
                 alt="ShopThings"
                 width={120}
                 height={36}
