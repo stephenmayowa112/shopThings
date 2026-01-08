@@ -15,6 +15,7 @@ import {
   Package,
   Truck,
 } from 'lucide-react';
+import { usePaystackPayment } from 'react-paystack';
 import { Button, Input } from '@/components/ui';
 import { useCartStore, useCurrencyStore } from '@/stores';
 import { getProductImage } from '@/lib/placeholders';
@@ -76,12 +77,41 @@ export default function CheckoutPage() {
     setCurrentStep('review');
   };
 
-  const handlePlaceOrder = async () => {
+  const paystackConfig = {
+    reference: (new Date()).getTime().toString(),
+    email: shippingForm.email,
+    amount: Math.round(total * 100), // Amount is in kobo (NGN)
+    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    currency: 'NGN',
+  };
+
+  const initializePayment = usePaystackPayment(paystackConfig);
+
+  const onSuccess = (reference: any) => {
+    // Implementation for whatever you want to do with reference and after success call.
+    processOrderCompletion();
+  };
+
+  const onClose = () => {
+    // implementation for  whatever you want to do when the Paystack dialog closed.
+    console.log('Payment closed');
+    setIsProcessing(false);
+  };
+
+  const processOrderCompletion = async () => {
     setIsProcessing(true);
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
     clearCart();
     window.location.href = '/orders/confirmation?order=ORD-' + Date.now();
+  };
+
+  const handlePlaceOrder = async () => {
+    if (paymentMethod === 'paystack') {
+      initializePayment({ onSuccess, onClose });
+    } else {
+      processOrderCompletion();
+    }
   };
 
   if (items.length === 0) {

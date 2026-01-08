@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins, Roboto } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout";
+import { Header, LiveChatSupport } from "@/components/layout";
 import FooterWrapper from "@/components/layout/FooterWrapper";
 import { AuthProvider } from "@/components/providers";
 
@@ -49,6 +49,7 @@ export default function RootLayout({
             {children}
           </main>
           <FooterWrapper />
+          <LiveChatSupport />
         </AuthProvider>
       </body>
     </html>
