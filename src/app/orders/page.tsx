@@ -12,51 +12,11 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { useCurrencyStore } from '@/stores';
+import { useState, useEffect } from 'react';
+import { getUserOrders } from '@/lib/orders';
+import { Loader2 } from 'lucide-react';
 
-const MOCK_ORDERS = [
-  {
-    id: 'ORD-1705123456789',
-    date: '2024-01-15',
-    status: 'delivered',
-    total: 45000,
-    itemCount: 3,
-    items: [
-      { name: 'Traditional Kente Cloth', quantity: 1 },
-      { name: 'Ankara Print Dress', quantity: 2 },
-    ],
-  },
-  {
-    id: 'ORD-1705234567890',
-    date: '2024-01-12',
-    status: 'shipped',
-    total: 32500,
-    itemCount: 2,
-    items: [
-      { name: 'Shea Butter Collection', quantity: 1 },
-      { name: 'Natural Hair Oil', quantity: 1 },
-    ],
-  },
-  {
-    id: 'ORD-1705345678901',
-    date: '2024-01-10',
-    status: 'processing',
-    total: 18000,
-    itemCount: 1,
-    items: [
-      { name: 'Handmade Leather Bag', quantity: 1 },
-    ],
-  },
-  {
-    id: 'ORD-1705456789012',
-    date: '2024-01-05',
-    status: 'cancelled',
-    total: 25000,
-    itemCount: 2,
-    items: [
-      { name: 'Batik Tie-Dye Fabric', quantity: 2 },
-    ],
-  },
-];
+// MOCK_ORDERS removed in favor of Supabase fetching
 
 const statusConfig = {
   pending: {
@@ -88,8 +48,44 @@ const statusConfig = {
 
 export default function OrdersPage() {
   const { formatConvertedPrice } = useCurrencyStore();
+  const [orders, setOrders] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (MOCK_ORDERS.length === 0) {
+  useEffect(() => {
+    async function loadOrders() {
+      setIsLoading(true);
+      try {
+        const data = await getUserOrders();
+        const mappedOrders = data.map((order: any) => ({
+          id: order.order_number,
+          date: order.created_at,
+          status: order.status,
+          total: order.total,
+          itemCount: order.items.reduce((acc: number, item: any) => acc + item.quantity, 0),
+          items: order.items.map((item: any) => ({
+            name: item.product?.name || 'Unknown Product',
+            quantity: item.quantity
+          }))
+        }));
+        setOrders(mappedOrders);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadOrders();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (orders.length === 0) {
     return (
       <div className="min-h-screen bg-background">
         {/* Breadcrumb */}
@@ -165,8 +161,8 @@ export default function OrdersPage() {
 
         {/* Orders List */}
         <div className="space-y-4">
-          {MOCK_ORDERS.map((order) => {
-            const status = statusConfig[order.status as keyof typeof statusConfig];
+          {orders.map((order) => {
+            const status = statusConfig[order.status as keyof typeof statusConfig] || statusConfig.pending;
             const StatusIcon = status.icon;
 
             return (

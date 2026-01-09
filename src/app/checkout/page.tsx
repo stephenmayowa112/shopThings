@@ -20,6 +20,7 @@ import { Button, Input } from '@/components/ui';
 import { useCartStore, useCurrencyStore } from '@/stores';
 import { getProductImage } from '@/lib/placeholders';
 import type { CurrencyCode } from '@/types';
+import { createOrder } from './actions';
 
 type CheckoutStep = 'shipping' | 'payment' | 'review';
 
@@ -88,22 +89,43 @@ export default function CheckoutPage() {
   const initializePayment = usePaystackPayment(paystackConfig);
 
   const onSuccess = (reference: any) => {
-    // Implementation for whatever you want to do with reference and after success call.
-    processOrderCompletion();
+    processOrderCompletion(reference.reference);
   };
 
   const onClose = () => {
-    // implementation for  whatever you want to do when the Paystack dialog closed.
     console.log('Payment closed');
     setIsProcessing(false);
   };
 
-  const processOrderCompletion = async () => {
+  const processOrderCompletion = async (reference?: string) => {
     setIsProcessing(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    clearCart();
-    window.location.href = '/orders/confirmation?order=ORD-' + Date.now();
+    
+    try {
+      const result = await createOrder(
+        items,
+        shippingForm,
+        total,
+        paymentMethod,
+        reference
+      );
+
+      if (result.error) {
+        alert(result.error);
+        setIsProcessing(false);
+        return;
+      }
+
+      if (result.success) {
+        clearCart();
+        // Use standard navigation instead of window.location for SPA experience if possible, 
+        // but window.location ensures fresh state. Keeping window.location as requested implicitly by preserving logic.
+        window.location.href = `/orders/confirmation?order=${result.orderNumber}`;
+      }
+    } catch (err) {
+      console.error(err);
+      alert('An unexpected error occurred.');
+      setIsProcessing(false);
+    }
   };
 
   const handlePlaceOrder = async () => {

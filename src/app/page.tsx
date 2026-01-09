@@ -33,22 +33,16 @@ const productDefaults = {
   is_featured: false,
 };
 
-const TRENDING_PRODUCTS = [
-  { id: 'trend-1', name: 'Ankara Midi Dress', price: 15000, average_rating: 4.8, review_count: 215, slug: 'ankara-midi-dress', vendor: { id: 'v1', store_name: 'Lagos Fashion House', is_verified: true } },
-  { id: 'trend-2', name: 'Handwoven Kente Scarf', price: 9500, average_rating: 4.7, review_count: 142, slug: 'kente-scarf', vendor: { id: 'v2', store_name: 'Accra Textiles', is_verified: true } },
-  { id: 'trend-3', name: 'Shea Butter Glow Kit', price: 7800, average_rating: 4.9, review_count: 310, slug: 'shea-butter-glow', vendor: { id: 'v3', store_name: 'Natural Ghana', is_verified: true } },
-  { id: 'trend-4', name: 'Hand-carved Ebony Mask', price: 22000, average_rating: 4.6, review_count: 98, slug: 'ebony-mask', vendor: { id: 'v4', store_name: 'Artisan Carvings', is_verified: true } },
-].map((p) => ({ ...productDefaults, ...p }));
-
-const NEW_ARRIVALS = [
-  { id: 'new-1', name: 'Bogolan Print Hoodie', price: 16500, average_rating: 4.7, review_count: 87, slug: 'bogolan-hoodie', vendor: { id: 'v5', store_name: 'Bamako Threads', is_verified: true } },
-  { id: 'new-2', name: 'Maasai Beaded Bracelet', price: 4500, average_rating: 4.5, review_count: 54, slug: 'maasai-bracelet', vendor: { id: 'v6', store_name: 'Nairobi Crafts', is_verified: true } },
-  { id: 'new-3', name: 'Roasted Ethiopian Coffee', price: 6800, average_rating: 4.8, review_count: 122, slug: 'ethiopian-coffee', vendor: { id: 'v7', store_name: 'Spice Route Delights', is_verified: true } },
-  { id: 'new-4', name: 'Tuareg Silver Pendant', price: 18500, average_rating: 4.9, review_count: 76, slug: 'tuareg-pendant', vendor: { id: 'v8', store_name: 'Sahara Metals', is_verified: true } },
-].map((p) => ({ ...productDefaults, ...p }));
+// Mock data removed in favor of Supabase fetching
 
 
-export default function Home() {
+export default async function Home() {
+  const featured = await getFeaturedProducts();
+  const allProducts = await getProducts();
+  
+  const trendingProducts = featured.length > 0 ? featured.slice(0, 4) : [];
+  const newArrivals = allProducts.length > 0 ? allProducts.slice(0, 4) : [];
+
   return (
     <>
       {/* Hero Section */}
@@ -315,8 +309,8 @@ export default function Home() {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {TRENDING_PRODUCTS.map((product) => (
-              <ProductCard key={product.id} product={product as any} />
+            {trendingProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
         </div>
@@ -333,8 +327,8 @@ export default function Home() {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {NEW_ARRIVALS.map((product) => (
-              <ProductCard key={product.id} product={product as any} />
+            {newArrivals.map((product) => (
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
         </div>
