@@ -20,6 +20,7 @@ import {
   Globe,
 } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
+import { registerVendor } from './actions';
 
 const STEPS = [
   { id: 1, name: 'Account', description: 'Your login details' },
@@ -97,11 +98,22 @@ export default function VendorRegisterPage() {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Redirect to vendor dashboard
-    router.push('/vendor/dashboard?welcome=true');
+    try {
+      const result = await registerVendor(formData);
+
+      if (result.error) {
+        alert(result.error);
+        setIsLoading(false);
+        return;
+      }
+      
+      // Redirect to vendor dashboard with welcome message
+      router.push('/vendor/dashboard?welcome=true');
+    } catch (error) {
+      console.error(error);
+      alert('Something went wrong');
+      setIsLoading(false);
+    }
   };
 
   const isStep1Valid = () => {
