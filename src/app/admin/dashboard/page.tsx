@@ -26,6 +26,15 @@ import {
   BadgeCheck,
   FileText,
   Bell,
+  Search,
+  Calendar,
+  Download,
+  Image as ImageIcon,
+  Tag,
+  Megaphone,
+  CreditCard,
+  PieChart,
+  Layers,
 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { useCurrencyStore } from '@/stores';
@@ -151,6 +160,7 @@ const NAV_ITEMS = [
 export default function AdminDashboardPage() {
   const { formatConvertedPrice } = useCurrencyStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedRange, setSelectedRange] = useState('7D');
 
   const maxUsers = Math.max(...USER_GROWTH.map(d => d.users));
 
@@ -250,7 +260,42 @@ export default function AdminDashboardPage() {
               </button>
               <h1 className="text-xl font-heading font-bold text-primary">Admin Dashboard</h1>
             </div>
-            
+
+            {/* Global Search Bar */}
+            <div className="flex-1 max-w-xl mx-4 hidden md:block">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input 
+                  type="text"
+                  placeholder="Search orders, users, products..." 
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+            </div>
+            Date Range Filter */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <h2 className="text-lg font-medium text-gray-700">Overview</h2>
+            <div className="flex items-center gap-2 bg-white p-1 rounded-lg border shadow-sm">
+              {['7D', '30D', '3M', 'YTD', 'ALL'].map((range) => (
+                <button 
+                  key={range}
+                  className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                    selectedRange === range ? 'bg-primary text-white' : 'text-gray-500 hover:bg-gray-100'
+                  }`}
+                  onClick={() => setSelectedRange(range)}
+                >
+                  {range}
+                </button>
+              ))}
+              <div className="w-px h-6 bg-gray-200 mx-1" />
+              <button className="flex items-center gap-2 px-3 py-1 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded transition-colors">
+                <Calendar className="w-4 h-4" />
+                <span className="hidden sm:inline">Custom</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 
             <div className="flex items-center gap-2">
               <button className="relative p-2 hover:bg-gray-100 rounded-lg">
                 <Bell className="w-5 h-5 text-gray-500" />
@@ -475,6 +520,72 @@ export default function AdminDashboardPage() {
                   </tbody>
                 </table>
               </div>
+            </div>
+          </div>
+
+          {/* Financial Overview & Exports */}
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <h2 className="font-heading font-bold text-primary flex items-center gap-2">
+                <CreditCard className="w-5 h-5" />
+                Financial Overview
+              </h2>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" className="flex items-center gap-2">
+                  <Download className="w-4 h-4" />
+                  Export Sales
+                </Button>
+                <Button variant="outline" size="sm" className="flex items-center gap-2">
+                  <Download className="w-4 h-4" />
+                  Export Taxes
+                </Button>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="p-4 rounded-lg bg-blue-50 border border-blue-100">
+                <p className="text-sm text-blue-600 mb-1">Total Revenue</p>
+                <p className="text-2xl font-bold text-blue-900">
+                  {formatConvertedPrice(28500000, 'NGN')}
+                </p>
+              </div>
+              <div className="p-4 rounded-lg bg-purple-50 border border-purple-100">
+                <p className="text-sm text-purple-600 mb-1">Vendor Payouts</p>
+                <p className="text-2xl font-bold text-purple-900">
+                  {formatConvertedPrice(24225000, 'NGN')}
+                </p>
+              </div>
+              <div className="p-4 rounded-lg bg-green-50 border border-green-100">
+                <p className="text-sm text-green-600 mb-1">Platform Commission</p>
+                <p className="text-2xl font-bold text-green-900">
+                  {formatConvertedPrice(4275000, 'NGN')}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* CMS Shortcuts */}
+          <div className="bg-white rounded-xl shadow-sm p-4">
+            <h2 className="font-heading font-bold text-primary mb-4 flex items-center gap-2">
+              <Layers className="w-5 h-5" />
+              Content Management
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <button className="flex flex-col items-center gap-2 p-4 rounded-lg border hover:border-primary hover:bg-primary/5 transition-colors">
+                <ImageIcon className="w-6 h-6 text-indigo-500" />
+                <span className="text-sm font-medium">Hero Banners</span>
+              </button>
+              <button className="flex flex-col items-center gap-2 p-4 rounded-lg border hover:border-primary hover:bg-primary/5 transition-colors">
+                <Tag className="w-6 h-6 text-pink-500" />
+                <span className="text-sm font-medium">Collections</span>
+              </button>
+              <button className="flex flex-col items-center gap-2 p-4 rounded-lg border hover:border-primary hover:bg-primary/5 transition-colors">
+                <Megaphone className="w-6 h-6 text-orange-500" />
+                <span className="text-sm font-medium">Announcements</span>
+              </button>
+              <button className="flex flex-col items-center gap-2 p-4 rounded-lg border hover:border-primary hover:bg-primary/5 transition-colors">
+                <FileText className="w-6 h-6 text-teal-500" />
+                <span className="text-sm font-medium">Blog Posts</span>
+              </button>
             </div>
           </div>
 
