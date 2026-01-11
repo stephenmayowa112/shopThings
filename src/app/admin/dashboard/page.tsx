@@ -451,15 +451,21 @@ export default function AdminDashboardPage() {
               </div>
               <div className="p-6">
                 <div className="flex items-end justify-between gap-2 h-48">
-                  {USER_GROWTH.map((data) => (
-                    <div key={data.month} className="flex-1 flex flex-col items-center gap-2">
-                      <div 
-                        className="w-full bg-secondary/80 rounded-t-lg transition-all hover:bg-secondary"
-                        style={{ height: `${(data.users / maxUsers) * 100}%` }}
-                      />
-                      <span className="text-xs text-muted-foreground">{data.month}</span>
-                    </div>
-                  ))}
+                  {(stats?.userGrowth?.length ? stats.userGrowth : []).map((data: any) => {
+                    const max = Math.max(...(stats?.userGrowth?.map((d: any) => d.users) || [1])) || 1;
+                    return (
+                      <div key={data.month} className="flex-1 flex flex-col items-center gap-2">
+                        <div 
+                          className="w-full bg-secondary/80 rounded-t-lg transition-all hover:bg-secondary"
+                          style={{ height: `${(data.users / max) * 100}%` }}
+                        />
+                        <span className="text-xs text-muted-foreground">{data.month}</span>
+                      </div>
+                    );
+                  })}
+                  {!stats?.userGrowth?.length && (
+                     <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">No growth data available</div>
+                  )}
                 </div>
               </div>
             </div>
@@ -524,7 +530,7 @@ export default function AdminDashboardPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y">
-                    {TOP_VENDORS.map((vendor, index) => (
+                    {(stats?.topVendors || []).map((vendor: any, index: number) => (
                       <tr key={vendor.id} className="hover:bg-gray-50">
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-3">
@@ -545,6 +551,13 @@ export default function AdminDashboardPage() {
                         </td>
                       </tr>
                     ))}
+                    {!stats?.topVendors?.length && (
+                      <tr>
+                        <td colSpan={4} className="py-8 text-center text-muted-foreground text-sm">
+                          No vendor data available.
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
