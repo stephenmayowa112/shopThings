@@ -30,7 +30,7 @@ export async function getAdminDashboardStats(): Promise<DashboardStats> {
   const supabase = await createClient();
   
   const start = Date.now();
-  // Parallelize fetch requests for better performance
+  
   const [
     { count: totalUsers },
     { count: activeVendors },
@@ -70,39 +70,36 @@ export async function getAdminDashboardStats(): Promise<DashboardStats> {
   const totalVendorPayouts = walletWithdrawals?.reduce((acc, tx) => acc + (tx.amount || 0), 0) || 0;
   const platformCommission = Math.max(0, totalRevenue - totalVendorEarnings);
 
-  // Mix Recent Activities
   const activities = [
     ...(recentOrders?.map(o => ({
       id: o.id,
       type: 'order_completed',
-      message: `Order #${o.order_number} completed`,
+      message: \Order #\ completed\,
       time: o.created_at,
       rawTime: new Date(o.created_at).getTime()
     })) || []),
     ...(recentVendors?.map(v => ({
       id: v.id,
       type: 'vendor_registered',
-      message: `New vendor registration: ${v.store_name}`,
+      message: \New vendor registration: \\,
       time: v.created_at,
       rawTime: new Date(v.created_at).getTime()
     })) || []),
     ...(recentProducts?.map(p => ({
       id: p.id,
       type: 'product_submitted',
-      message: `Product submitted: ${p.name}`,
+      message: \Product submitted: \\,
       time: p.created_at,
       rawTime: new Date(p.created_at).getTime()
     })) || [])
   ].sort((a, b) => b.rawTime - a.rawTime).slice(0, 10);
 
-  // Top Vendors
   const walletSalesMap = new Map<string, number>();
   walletSales?.forEach(tx => {
       const current = walletSalesMap.get(tx.wallet_id) || 0;
       walletSalesMap.set(tx.wallet_id, current + (tx.amount || 0));
   });
 
-  // Get top 5 wallet IDs by sales volume
   const topWalletIds = Array.from(walletSalesMap.entries())
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5)
@@ -130,7 +127,6 @@ export async function getAdminDashboardStats(): Promise<DashboardStats> {
       });
   }
 
-  // Fallback to recent vendors if no sales data exists
   if (topVendors.length === 0 && recentVendors && recentVendors.length > 0) {
       topVendors = recentVendors.map(v => ({
         id: v.id,
@@ -141,7 +137,6 @@ export async function getAdminDashboardStats(): Promise<DashboardStats> {
     }));
   }
 
-  // User Growth
   const now = new Date();
   const growthData = [];
   
@@ -149,10 +144,7 @@ export async function getAdminDashboardStats(): Promise<DashboardStats> {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const monthKey = d.toLocaleString('default', { month: 'short' });
     const nextMonth = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
-    
-    // Count users created strictly before the end of this month (Cumulative)
     const count = profilesData?.filter(p => new Date(p.created_at) < nextMonth).length || 0;
-    
     growthData.push({ month: monthKey, users: count });
   }
 
@@ -160,7 +152,7 @@ export async function getAdminDashboardStats(): Promise<DashboardStats> {
     totalUsers: totalUsers || 0,
     activeVendors: activeVendors || 0,
     totalProducts: totalProducts || 0,
-    salesVolume,
+    salesVolume: totalRevenue,
     pendingVendors: pendingVendors || 0,
     pendingProducts: pendingProducts || 0,
     pendingWithdrawals: pendingWithdrawals || 0,
@@ -177,5 +169,44 @@ export async function getAdminDashboardStats(): Promise<DashboardStats> {
       database: { status: 'Healthy', latency: dbLatency },
       api: { status: 'Healthy', latency: Math.floor(Math.random() * 50) + 10 }
     }
+  };
+}
+
+export async function getAdminUsersList(page = 1, limit = 50, search = '') {
+  const supabase = await createClient();
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase.from('profiles').select('*, orders(count)');
+
+  if (search) {
+    query = query.or(\ull_name.ilike.%\%,email.ilike.%\%\);
+  }
+
+  const { data, count, error } = await query.order('created_at', { ascending: false }).range(from, to);
+
+  // Note: simple select with count join doesn't return count property at root in all client versions but usually as a property on the object array item.
+  return {
+    users: data?.map(u => ({...u, orders: (u.orders as any)?.[0]?.count || 0 })) || [],
+    count: count || 0
+  };
+}
+
+export async function getAdminVendorsList(page = 1, limit = 50, search = '') {
+  const supabase = await createClient();
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase.from('vendors').select('*, products(count)', { count: 'exact' });
+
+  if (search) {
+     query = query.or(\store_name.ilike.%\%\);
+  }
+
+  const { data, count, error } = await query.order('created_at', { ascending: false }).range(from, to);
+   
+   return {
+    vendors: data?.map(v => ({...v, products: (v.products as any)?.[0]?.count || 0 })) || [],
+    count: count || 0
   };
 }
