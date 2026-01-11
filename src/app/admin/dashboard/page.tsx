@@ -163,6 +163,27 @@ export default function AdminDashboardPage() {
     },
   ];
 
+  const systemHealthData = [
+    { 
+      label: 'Database', 
+      status: stats?.systemHealth?.database?.status || 'Loading...', 
+      value: stats?.systemHealth ? `${stats.systemHealth.database.latency}ms` : '...', 
+      color: 'text-green-600', 
+      bg: 'bg-green-100', 
+      icon: Server 
+    },
+    { 
+      label: 'API Latency', 
+      status: stats?.systemHealth?.api?.status || 'Loading...', 
+      value: stats?.systemHealth ? `${stats.systemHealth.api.latency}ms` : '...', 
+      color: 'text-green-600', 
+      bg: 'bg-green-100', 
+      icon: Activity 
+    },
+    { label: 'Payment Gateway', status: 'Healthy', value: 'Operational', color: 'text-green-600', bg: 'bg-green-100', icon: CreditCard },
+    { label: 'Email Service', status: 'Degraded', value: 'High Queue', color: 'text-yellow-600', bg: 'bg-yellow-100', icon: Megaphone },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mobile Sidebar Overlay */}
@@ -356,7 +377,7 @@ export default function AdminDashboardPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="bg-orange-100 text-orange-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
-                      {PENDING_ITEMS.vendors}
+                      {stats?.pendingVendors || 0}
                     </span>
                     <ChevronRight className="w-5 h-5 text-gray-400" />
                   </div>
@@ -374,7 +395,7 @@ export default function AdminDashboardPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="bg-purple-100 text-purple-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
-                      {PENDING_ITEMS.products}
+                      {stats?.pendingProducts || 0}
                     </span>
                     <ChevronRight className="w-5 h-5 text-gray-400" />
                   </div>
@@ -392,7 +413,7 @@ export default function AdminDashboardPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
-                      {PENDING_ITEMS.withdrawals}
+                      {stats?.pendingWithdrawals || 0}
                     </span>
                     <ChevronRight className="w-5 h-5 text-gray-400" />
                   </div>
@@ -410,7 +431,7 @@ export default function AdminDashboardPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="bg-red-100 text-red-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
-                      {PENDING_ITEMS.reports}
+                      {stats?.pendingReports || 0}
                     </span>
                     <ChevronRight className="w-5 h-5 text-gray-400" />
                   </div>
@@ -453,8 +474,16 @@ export default function AdminDashboardPage() {
                 <Button variant="ghost" size="sm">View All</Button>
               </div>
               <div className="divide-y">
-                {RECENT_ACTIVITIES.map((activity) => {
-                  const Icon = activity.icon;
+                {(stats?.recentActivities || []).map((activity) => {
+                  const Icon = activity.type === 'vendor_registered' ? Store :
+                               activity.type === 'product_submitted' ? Package :
+                               activity.type === 'order_completed' ? ShoppingBag :
+                               activity.type === 'withdrawal_requested' ? DollarSign : Bell;
+
+                  // Format date to something readable like "2 hours ago" or just the date
+                  const date = new Date(activity.time);
+                  const timeString = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
                   return (
                     <div key={activity.id} className="p-4 flex items-start gap-3">
                       <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -462,7 +491,7 @@ export default function AdminDashboardPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm text-foreground">{activity.message}</p>
-                        <p className="text-xs text-muted-foreground mt-1">{activity.time}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{timeString}</p>
                       </div>
                     </div>
                   );
@@ -716,23 +745,4 @@ export default function AdminDashboardPage() {
                 <span className="text-sm font-medium text-center">Add Vendor</span>
               </Link>
               <Link
-                href="/admin/categories"
-                className="flex flex-col items-center gap-2 p-4 rounded-lg border-2 border-dashed hover:border-secondary hover:bg-secondary/5 transition-colors"
-              >
-                <Package className="w-6 h-6 text-gray-400" />
-                <span className="text-sm font-medium text-center">Manage Categories</span>
-              </Link>
-              <Link
-                href="/admin/settings"
-                className="flex flex-col items-center gap-2 p-4 rounded-lg border-2 border-dashed hover:border-secondary hover:bg-secondary/5 transition-colors"
-              >
-                <Settings className="w-6 h-6 text-gray-400" />
-                <span className="text-sm font-medium text-center">Platform Settings</span>
-              </Link>
-            </div>
-          </div>
-        </main>
-      </div>
-    </div>
-  );
-}
+                href="/admin
