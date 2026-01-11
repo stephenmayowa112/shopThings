@@ -46,49 +46,6 @@ import {
 import { Button } from '@/components/ui';
 import { useCurrencyStore } from '@/stores';
 
-// Top Vendors (Placeholder/Mock as it requires complex aggregation)
-const TOP_VENDORS = [
-  { id: '1', name: 'Accra Textiles', sales: 4500000, products: 156, orders: 342 },
-  { id: '2', name: 'Lagos Fashion Hub', sales: 3200000, products: 89, orders: 278 },
-  { id: '3', name: 'Nairobi Crafts', sales: 2800000, products: 234, orders: 198 },
-  { id: '4', name: 'African Arts Gallery', sales: 2100000, products: 67, orders: 156 },
-  { id: '5', name: 'Addis Designs', sales: 1900000, products: 112, orders: 134 },
-];
-
-// Mock user growth data for chart simulation (Placeholder)
-const USER_GROWTH = [
-  { month: 'Aug', users: 8500 },
-  { month: 'Sep', users: 9200 },
-  { month: 'Oct', users: 10100 },
-  { month: 'Nov', users: 11200 },
-  { month: 'Dec', users: 11800 },
-  { month: 'Jan', users: 12543 },
-];
-
-// Mock System Health (Placeholder)
-const SYSTEM_HEALTH = [
-const SYSTEM_HEALTH = [
-  { label: 'API Latency', status: 'Healthy', value: '45ms', color: 'text-green-600', bg: 'bg-green-100', icon: Activity },
-  { label: 'Database', status: 'Healthy', value: 'Connected', color: 'text-green-600', bg: 'bg-green-100', icon: Server },
-  { label: 'Payment Gateway', status: 'Healthy', value: 'Operational', color: 'text-green-600', bg: 'bg-green-100', icon: CreditCard },
-  { label: 'Email Service', status: 'Degraded', value: 'High Queue', color: 'text-yellow-600', bg: 'bg-yellow-100', icon: Megaphone },
-];
-
-// Mock Support Tickets
-const SUPPORT_TICKETS = [
-  { id: 1, subject: 'Payment Failed', user: 'john@example.com', priority: 'High', status: 'Open', time: '2h ago' },
-  { id: 2, subject: 'Account Access', user: 'sarah@test.com', priority: 'Medium', status: 'Open', time: '4h ago' },
-  { id: 3, subject: 'Vendor Inquiry', user: 'store@vendor.com', priority: 'Low', status: 'Pending', time: '1d ago' },
-];
-
-// Mock Audit Logs
-const AUDIT_LOGS = [
-  { id: 1, admin: 'Admin User', action: 'Approved Vendor', target: 'Lagos Fashion Hub', time: '10 mins ago' },
-  { id: 2, admin: 'Super Admin', action: 'Changed Fees', target: 'Global Settings', time: '2 hours ago' },
-  { id: 3, admin: 'Support Lead', action: 'Resolved Ticket', target: '#TKT-2024-89', time: '5 hours ago' },
-  { id: 4, admin: 'Admin User', action: 'Banned User', target: 'spam_bot_99', time: '1 day ago' },
-];
-
 const NAV_ITEMS = [
   { label: 'Dashboard', href: '/admin/dashboard', icon: Home },
   { label: 'Users', href: '/admin/users', icon: Users },
@@ -121,7 +78,7 @@ export default function AdminDashboardPage() {
     loadStats();
   }, []);
 
-  const maxUsers = Math.max(...USER_GROWTH.map(d => d.users));
+  const maxUsers = stats?.userGrowth ? Math.max(...stats.userGrowth.map(d => d.users)) : 1;
 
   const statsCards = [
     {
@@ -586,19 +543,19 @@ export default function AdminDashboardPage() {
               <div className="p-4 rounded-lg bg-blue-50 border border-blue-100">
                 <p className="text-sm text-blue-600 mb-1">Total Revenue</p>
                 <p className="text-2xl font-bold text-blue-900">
-                  {formatConvertedPrice(28500000, 'NGN')}
+                  {stats?.financials ? formatConvertedPrice(stats.financials.revenue, 'NGN') : '...'}
                 </p>
               </div>
               <div className="p-4 rounded-lg bg-purple-50 border border-purple-100">
                 <p className="text-sm text-purple-600 mb-1">Vendor Payouts</p>
                 <p className="text-2xl font-bold text-purple-900">
-                  {formatConvertedPrice(24225000, 'NGN')}
+                  {stats?.financials ? formatConvertedPrice(stats.financials.payouts, 'NGN') : '...'}
                 </p>
               </div>
               <div className="p-4 rounded-lg bg-green-50 border border-green-100">
                 <p className="text-sm text-green-600 mb-1">Platform Commission</p>
                 <p className="text-2xl font-bold text-green-900">
-                  {formatConvertedPrice(4275000, 'NGN')}
+                  {stats?.financials ? formatConvertedPrice(stats.financials.commission, 'NGN') : '...'}
                 </p>
               </div>
             </div>
@@ -630,10 +587,8 @@ export default function AdminDashboardPage() {
             </div>
           </div>
 
-          {/* System Health & Support Tickets */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* System Health */}
-            <div className="bg-white rounded-xl shadow-sm p-4">
+          {/* System Health */}
+          <div className="bg-white rounded-xl shadow-sm p-4">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-heading font-bold text-primary flex items-center gap-2">
                   <Activity className="w-5 h-5" />
@@ -643,7 +598,7 @@ export default function AdminDashboardPage() {
                   All Systems Operational
                 </span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {systemHealthData.map((item) => {
                   const Icon = item.icon;
                   return (
@@ -663,81 +618,6 @@ export default function AdminDashboardPage() {
                 })}
               </div>
             </div>
-
-            {/* Support Tickets */}
-            <div className="bg-white rounded-xl shadow-sm">
-              <div className="p-4 border-b flex items-center justify-between">
-                <h2 className="font-heading font-bold text-primary flex items-center gap-2">
-                  <LifeBuoy className="w-5 h-5" />
-                  Support Tickets
-                </h2>
-                <Button variant="ghost" size="sm">View All</Button>
-              </div>
-              <div className="divide-y">
-                {SUPPORT_TICKETS.map((ticket) => (
-                  <div key={ticket.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                    <div className="flex-1 min-w-0 pr-4">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium text-sm text-gray-900 truncate">{ticket.subject}</span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full border ${
-                          ticket.priority === 'High' ? 'bg-red-50 text-red-600 border-red-100' :
-                          ticket.priority === 'Medium' ? 'bg-orange-50 text-orange-600 border-orange-100' :
-                          'bg-blue-50 text-blue-600 border-blue-100'
-                        }`}>
-                          {ticket.priority}
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-500 truncate">From: {ticket.user}</p>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      <span className="text-xs text-gray-500 block mb-1">{ticket.time}</span>
-                      <span className="text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
-                        {ticket.status}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Audit Logs */}
-          <div className="bg-white rounded-xl shadow-sm p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-heading font-bold text-primary flex items-center gap-2">
-                <ShieldAlert className="w-5 h-5" />
-                Recent Audit Logs
-              </h2>
-              <Button variant="ghost" size="sm">Full Log</Button>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b bg-gray-50/50 text-left">
-                    <th className="py-2 px-3 font-medium text-gray-500">Admin</th>
-                    <th className="py-2 px-3 font-medium text-gray-500">Action</th>
-                    <th className="py-2 px-3 font-medium text-gray-500">Target</th>
-                    <th className="py-2 px-3 font-medium text-gray-500 text-right">Time</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {AUDIT_LOGS.map((log) => (
-                    <tr key={log.id} className="hover:bg-gray-50">
-                      <td className="py-2 px-3 font-medium text-gray-900">{log.admin}</td>
-                      <td className="py-2 px-3 text-gray-600">
-                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-gray-100 text-gray-700">
-                          <ClipboardList className="w-3 h-3" />
-                          {log.action}
-                        </span>
-                      </td>
-                      <td className="py-2 px-3 text-gray-600 font-mono text-xs">{log.target}</td>
-                      <td className="py-2 px-3 text-gray-500 text-right">{log.time}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
 
           {/* Quick Actions */}
           <div className="bg-white rounded-xl shadow-sm p-4">
