@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getUserProfile, updateUserProfile } from '@/app/account/actions';
+import { 
+  getUserProfile, 
+  updateUserProfile, 
+  verifyCurrentPassword, 
+  updatePassword,
+  disableTwoFactor
+} from '@/app/account/actions';
 import { 
   User, 
   Mail, 
@@ -96,16 +102,61 @@ export default function ProfilePage() {
     sms_orders: false,
   });
 
-  const handlePasswordChange = () => {
-    // Mock password change for now
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState('');
+
+  const handlePasswordChange = async () => {
+    setPasswordError('');
+    setPasswordSuccess('');
+
+    if (!passwordData.current_password || !passwordData.new_password || !passwordData.confirm_password) {
+      setPasswordError('All fields are required');
+      return;
+    }
+
+    if (passwordData.new_password !== passwordData.confirm_password) {
+      setPasswordError('New passwords do not match');
+      return;
+    }
+
+    if (passwordData.new_password.length < 6) {
+        setPasswordError('Password must be at least 6 characters');
+        return;
+    }
+
+    const verifyRes = await verifyCurrentPassword(passwordData.current_password);
+    if (verifyRes.error) {
+        setPasswordError('Incorrect current password');
+        return;
+    }
+
+    const updateRes = await updatePassword(passwordData.new_password);
+    if (updateRes.error) {
+        setPasswordError(updateRes.error);
+        return;
+    }
+
+    setPasswordSuccess('Password updated successfully');
     setPasswordData({
       current_password: '',
       new_password: '',
       confirm_password: '',
     });
-    setShowPasswordForm(false);
-    setSaveSuccess(true);
-    setTimeout(() => setSaveSuccess(false), 3000);
+    setTimeout(() => {
+        setShowPasswordForm(false);
+        setPasswordSuccess('');
+    }, 2000);
+  };
+
+  const handleDisable2FA = async () => {
+      if(!confirm('Are you sure you want to disable 2FA? This will lower your account security.')) return;
+      
+      const res = await disableTwoFactor();
+      if(res.success) {
+          setUserProfile((prev: any) => ({ ...prev, two_factor_enabled: false }));
+      } else {
+          alert('Failed to disable 2FA');
+      }
   };
 
   const TABS = [

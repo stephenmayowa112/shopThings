@@ -76,3 +76,77 @@ export async function updateUserProfile(data: { firstName: string; lastName: str
   revalidatePath('/account/profile');
   return { success: true };
 }
+
+export async function verifyCurrentPassword(password: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user || !user.email) return { error: 'Not authenticated' };
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password: password,
+  });
+
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
+export async function updatePassword(newPassword: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
+export async function enrollTwoFactor() {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { error: 'Not authenticated' };
+
+    const { data, error } = await supabase.auth.mfa.enroll({
+        factorType: 'totp'
+    });
+
+    if (error) return { error: error.message };
+    
+    return { data };
+}
+
+export async function verifyTwoFactor(factorId: string, code: string) {
+  const supabase = await createClient();
+  
+  const { data, error } = await supabase.auth.mfa.challengeAndVerify({
+    factorId,
+    code,
+  });
+
+  if (error) return { error: error.message };
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) {
+      await supabase.from('profiles').update({ two_factor_enabled: true }).eq('id', user.id);
+  }
+
+  return { success: true };
+}
+
+export async function disableTwoFactor() {
+    const supabase = await createClient();
+     const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { error: 'Not authenticated' };
+
+    const { data: factors } = await supabase.auth.mfa.listFactors();
+    if (!factors || factors.totp.length === 0) {
+        // Just in case profile is out of sync
+        await supabase.from('profiles').update({ two_factor_enabled: false }).eq('id', user.id);
+        return { success: true };
+    }
+
+    // Unenroll all TOTP factors
+    for (const factor of factors.totp) {
+        await supabase.auth.mfa.unenroll({ factorId: factor.id });
+    }
+    
+    await supabase.from('profiles').update({ two_factor_enabled: false }).eq('id', user.id);
+    return { success: true };
+}
