@@ -12,13 +12,36 @@ export async function getUserProfile() {
     return null;
   }
 
-  const { data: profile, error } = await supabase
+  let { data: profile, error } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', user.id)
     .single();
 
-  if (error) {
+  if (error && error.code === 'PGRST116') {
+    // Profile doesn't exist, create it from auth data
+    const { data: newProfile, error: createError } = await supabase
+      .from('profiles')
+      .insert({
+        id: user.id,
+        email: user.email!,
+        full_name: user.user_metadata?.full_name || user.user_metadata?.name || '',
+        phone: user.phone || null,
+        role: 'buyer',
+        is_active: true,
+        two_factor_enabled: false,
+        preferred_currency: 'NGN' // Default to NGN
+      })
+      .select()
+      .single();
+
+    if (createError) {
+      console.error('Error creating missing profile:', createError);
+      return null;
+    }
+    
+    profile = newProfile;
+  } else if (error) {
     console.error('Error fetching profile:', error);
     return null;
   }
