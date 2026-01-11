@@ -35,6 +35,12 @@ import {
   CreditCard,
   PieChart,
   Layers,
+  Activity,
+  Server,
+  LifeBuoy,
+  ClipboardList,
+  ShieldAlert,
+  Smartphone, // using for api/services if needed, or stick to Server
 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { useCurrencyStore } from '@/stores';
@@ -144,6 +150,29 @@ const USER_GROWTH = [
   { month: 'Nov', users: 11200 },
   { month: 'Dec', users: 11800 },
   { month: 'Jan', users: 12543 },
+];
+
+// Mock System Health
+const SYSTEM_HEALTH = [
+  { label: 'API Latency', status: 'Healthy', value: '45ms', color: 'text-green-600', bg: 'bg-green-100', icon: Activity },
+  { label: 'Database', status: 'Healthy', value: 'Connected', color: 'text-green-600', bg: 'bg-green-100', icon: Server },
+  { label: 'Payment Gateway', status: 'Healthy', value: 'Operational', color: 'text-green-600', bg: 'bg-green-100', icon: CreditCard },
+  { label: 'Email Service', status: 'Degraded', value: 'High Queue', color: 'text-yellow-600', bg: 'bg-yellow-100', icon: Megaphone },
+];
+
+// Mock Support Tickets
+const SUPPORT_TICKETS = [
+  { id: 1, subject: 'Payment Failed', user: 'john@example.com', priority: 'High', status: 'Open', time: '2h ago' },
+  { id: 2, subject: 'Account Access', user: 'sarah@test.com', priority: 'Medium', status: 'Open', time: '4h ago' },
+  { id: 3, subject: 'Vendor Inquiry', user: 'store@vendor.com', priority: 'Low', status: 'Pending', time: '1d ago' },
+];
+
+// Mock Audit Logs
+const AUDIT_LOGS = [
+  { id: 1, admin: 'Admin User', action: 'Approved Vendor', target: 'Lagos Fashion Hub', time: '10 mins ago' },
+  { id: 2, admin: 'Super Admin', action: 'Changed Fees', target: 'Global Settings', time: '2 hours ago' },
+  { id: 3, admin: 'Support Lead', action: 'Resolved Ticket', target: '#TKT-2024-89', time: '5 hours ago' },
+  { id: 4, admin: 'Admin User', action: 'Banned User', target: 'spam_bot_99', time: '1 day ago' },
 ];
 
 const NAV_ITEMS = [
@@ -586,6 +615,115 @@ export default function AdminDashboardPage() {
                 <FileText className="w-6 h-6 text-teal-500" />
                 <span className="text-sm font-medium">Blog Posts</span>
               </button>
+            </div>
+          </div>
+
+          {/* System Health & Support Tickets */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* System Health */}
+            <div className="bg-white rounded-xl shadow-sm p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-heading font-bold text-primary flex items-center gap-2">
+                  <Activity className="w-5 h-5" />
+                  System Health
+                </h2>
+                <span className="text-xs font-medium px-2 py-1 bg-green-100 text-green-700 rounded-full">
+                  All Systems Operational
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {SYSTEM_HEALTH.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={item.label} className="flex items-center gap-3 p-3 rounded-lg border border-gray-100">
+                      <div className={`w-10 h-10 ${item.bg} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                        <Icon className={`w-5 h-5 ${item.color}`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900">{item.label}</p>
+                        <div className="flex items-center justify-between">
+                          <p className={`text-xs ${item.label === 'Email Service' ? 'text-yellow-600' : 'text-green-600'}`}>{item.status}</p>
+                          <p className="text-xs text-gray-500">{item.value}</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Support Tickets */}
+            <div className="bg-white rounded-xl shadow-sm">
+              <div className="p-4 border-b flex items-center justify-between">
+                <h2 className="font-heading font-bold text-primary flex items-center gap-2">
+                  <LifeBuoy className="w-5 h-5" />
+                  Support Tickets
+                </h2>
+                <Button variant="ghost" size="sm">View All</Button>
+              </div>
+              <div className="divide-y">
+                {SUPPORT_TICKETS.map((ticket) => (
+                  <div key={ticket.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                    <div className="flex-1 min-w-0 pr-4">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-sm text-gray-900 truncate">{ticket.subject}</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full border ${
+                          ticket.priority === 'High' ? 'bg-red-50 text-red-600 border-red-100' :
+                          ticket.priority === 'Medium' ? 'bg-orange-50 text-orange-600 border-orange-100' :
+                          'bg-blue-50 text-blue-600 border-blue-100'
+                        }`}>
+                          {ticket.priority}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500 truncate">From: {ticket.user}</p>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <span className="text-xs text-gray-500 block mb-1">{ticket.time}</span>
+                      <span className="text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
+                        {ticket.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Audit Logs */}
+          <div className="bg-white rounded-xl shadow-sm p-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-heading font-bold text-primary flex items-center gap-2">
+                <ShieldAlert className="w-5 h-5" />
+                Recent Audit Logs
+              </h2>
+              <Button variant="ghost" size="sm">Full Log</Button>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-gray-50/50 text-left">
+                    <th className="py-2 px-3 font-medium text-gray-500">Admin</th>
+                    <th className="py-2 px-3 font-medium text-gray-500">Action</th>
+                    <th className="py-2 px-3 font-medium text-gray-500">Target</th>
+                    <th className="py-2 px-3 font-medium text-gray-500 text-right">Time</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {AUDIT_LOGS.map((log) => (
+                    <tr key={log.id} className="hover:bg-gray-50">
+                      <td className="py-2 px-3 font-medium text-gray-900">{log.admin}</td>
+                      <td className="py-2 px-3 text-gray-600">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-gray-100 text-gray-700">
+                          <ClipboardList className="w-3 h-3" />
+                          {log.action}
+                        </span>
+                      </td>
+                      <td className="py-2 px-3 text-gray-600 font-mono text-xs">{log.target}</td>
+                      <td className="py-2 px-3 text-gray-500 text-right">{log.time}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
 
