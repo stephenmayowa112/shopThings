@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { getUserProfile, updateUserProfile } from '@/app/account/actions';
 import { 
   User, 
   Mail, 
@@ -18,68 +19,63 @@ import {
 } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
 
-const MOCK_USER = {
-  id: '1',
-  first_name: 'John',
-  last_name: 'Doe',
-  email: 'john.doe@example.com',
-  phone: '+234 801 234 5678',
-  avatar: null,
-  email_verified: true,
-  phone_verified: false,
-  two_factor_enabled: false,
-  created_at: '2024-01-15',
-};
-
 type Tab = 'profile' | 'security' | 'notifications';
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<Tab>('profile');
   const [isEditing, setIsEditing] = useState(false);
-  const [showPasswordForm, setShowPasswordForm] = useState(false);
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
+  const [userProfile, setUserProfile] = useState<any>(null);
   const [formData, setFormData] = useState({
-    first_name: MOCK_USER.first_name,
-    last_name: MOCK_USER.last_name,
-    email: MOCK_USER.email,
-    phone: MOCK_USER.phone,
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
   });
 
-  const [passwordData, setPasswordData] = useState({
-    current_password: '',
-    new_password: '',
-    confirm_password: '',
-  });
+  useEffect(() => {
+    async function loadProfile() {
+      const profile = await getUserProfile();
+      if (profile) {
+        setUserProfile(profile);
+        const [first, ...rest] = (profile.full_name || '').split(' ');
+        setFormData({
+          first_name: first || '',
+          last_name: rest.join(' ') || '',
+          email: profile.email || '',
+          phone: profile.phone || '',
+        });
+      }
+      setIsLoading(false);
+    }
+    loadProfile();
+  }, []);
 
-  const [notifications, setNotifications] = useState({
-    email_orders: true,
-    email_promotions: false,
-    email_newsletter: true,
-    push_orders: true,
-    push_promotions: false,
-    sms_orders: false,
-  });
-
-  const handleSave = () => {
-    // Mock save
+  const handleSave = async () => {
     setIsEditing(false);
-    setSaveSuccess(true);
-    setTimeout(() => setSaveSuccess(false), 3000);
-  };
-
-  const handlePasswordChange = () => {
-    // Mock password change
-    setPasswordData({
-      current_password: '',
-      new_password: '',
-      confirm_password: '',
+    
+    const result = await updateUserProfile({
+      firstName: formData.first_name,
+      lastName: formData.last_name,
+      phone: formData.phone,
     });
-    setShowPasswordForm(false);
-    setSaveSuccess(true);
-    setTimeout(() => setSaveSuccess(false), 3000);
+
+    if (result.success) {
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+      
+      // Update local profile state to reflect changes
+      setUserProfile((prev: any) => ({
+        ...prev,
+        full_name: `${formData.first_name} ${formData.last_name}`.trim(),
+        phone: formData.phone
+      }));
+    } else {
+      console.error(result.error);
+      // specific error handling if needed
+    }
   };
 
   const TABS = [
