@@ -631,7 +631,7 @@ export default function AdminDashboardPage() {
                 </span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {SYSTEM_HEALTH.map((item) => {
+                {systemHealthData.map((item) => {
                   const Icon = item.icon;
                   return (
                     <div key={item.label} className="flex items-center gap-3 p-3 rounded-lg border border-gray-100">
@@ -745,4 +745,23 @@ export default function AdminDashboardPage() {
                 <span className="text-sm font-medium text-center">Add Vendor</span>
               </Link>
               <Link
-                href="/admin
+                href="/admin/categories"
+                className="flex flex-col items-center gap-2 p-4 rounded-lg border-2 border-dashed hover:border-secondary hover:bg-secondary/5 transition-colors"
+              >
+                <Package className="w-6 h-6 text-gray-400" />
+                <span className="text-sm font-medium text-center">Manage Categories</span>
+              </Link>
+              <Link
+                href="/admin/settings"
+                className="flex flex-col items-center gap-2 p-4 rounded-lg border-2 border-dashed hover:border-secondary hover:bg-secondary/5 transition-colors"
+              >
+                <Settings className="w-6 h-6 text-gray-400" />
+                <span className="text-sm font-medium text-center">Platform Settings</span>
+              </Link>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
