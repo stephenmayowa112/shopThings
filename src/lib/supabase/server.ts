@@ -14,7 +14,7 @@ export async function createClient() {
     );
   }
 
-  return createServerClient<Database>(
+  return createServerClient(
     supabaseUrl,
     supabaseAnonKey,
     {

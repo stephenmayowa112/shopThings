@@ -1,7 +1,7 @@
 import { createBrowserClient, SupabaseClient } from '@supabase/ssr';
 import type { Database } from '@/types/database';
 
-let client: SupabaseClient<Database> | undefined;
+let client: SupabaseClient | undefined;
 
 function createSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -13,7 +13,7 @@ function createSupabaseClient() {
     );
   }
 
-  return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
+  return createBrowserClient(supabaseUrl, supabaseAnonKey);
 }
 
 export function createClient() {
