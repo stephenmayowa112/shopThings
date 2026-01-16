@@ -198,7 +198,7 @@ export default function AdminOrdersPage() {
             <div className='bg-white rounded-xl p-4 shadow-sm'>
                 <p className='text-sm text-muted-foreground'>Total Revenue</p>
                 <p className='text-2xl font-bold text-primary mt-1'>
-                    {formatConvertedPrice(stats?.financials?.revenue || 0)}
+                    {formatConvertedPrice(stats?.financials?.revenue || 0, 'NGN')}
                 </p>
             </div>
             <div className='bg-white rounded-xl p-4 shadow-sm'>
@@ -264,7 +264,7 @@ export default function AdminOrdersPage() {
                                     <p className='text-xs text-gray-400 mt-1'>{new Date(order.created_at).toLocaleString()}</p>
                                 </div>
                                 <div className='flex items-center gap-4'>
-                                    <span className='font-bold text-primary'>{formatConvertedPrice(order.total)}</span>
+                                    <span className='font-bold text-primary'>{formatConvertedPrice(order.total, 'NGN')}</span>
                                     <span className={`flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${statusConfig.bg} ${statusConfig.text}`}>
                                         <StatusIcon className='w-3 h-3' />
                                         <span>{statusConfig.label}</span>
@@ -313,7 +313,7 @@ export default function AdminOrdersPage() {
                                     </div>
                                     <div>
                                         <label className='text-xs text-gray-500 uppercase'>Total Amount</label>
-                                        <p className='font-bold text-xl text-primary'>{formatConvertedPrice(selectedOrderData.total)}</p>
+                                        <p className='font-bold text-xl text-primary'>{formatConvertedPrice(selectedOrderData.total, 'NGN')}</p>
                                     </div>
 
                                     {/* Note: Items would require another query or joined fetch. For now we show summary. */}

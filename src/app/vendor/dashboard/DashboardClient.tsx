@@ -192,7 +192,7 @@ export default function DashboardClient({ data }: DashboardClientProps) {
                 <div>
                   <p className="text-sm text-muted-foreground">Total Sales</p>
                   <p className="text-2xl font-bold text-primary mt-1">
-                    {formatConvertedPrice(stats.totalSales)}
+                    {formatConvertedPrice(stats.totalSales, 'NGN')}
                   </p>
                 </div>
                 <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -256,7 +256,7 @@ export default function DashboardClient({ data }: DashboardClientProps) {
                 <div>
                   <p className="text-sm text-muted-foreground">Wallet Balance</p>
                   <p className="text-2xl font-bold text-primary mt-1">
-                    {formatConvertedPrice(stats.walletBalance)}
+                    {formatConvertedPrice(stats.walletBalance, 'NGN')}
                   </p>
                 </div>
                 <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
@@ -264,7 +264,7 @@ export default function DashboardClient({ data }: DashboardClientProps) {
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mt-3">
-                Pending: {formatConvertedPrice(stats.pendingBalance)}
+                Pending: {formatConvertedPrice(stats.pendingBalance, 'NGN')}
               </p>
             </div>
           </div>
@@ -363,7 +363,7 @@ export default function DashboardClient({ data }: DashboardClientProps) {
                         <td className="px-4 py-3 text-sm truncate max-w-[150px]">{order.product_name}</td>
                         <td className="px-4 py-3 text-sm">{order.items}</td>
                         <td className="px-4 py-3 text-sm font-medium">
-                          {formatConvertedPrice(order.total)}
+                          {formatConvertedPrice(order.total, 'NGN')}
                         </td>
                         <td className="px-4 py-3">
                           <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full capitalize ${
@@ -412,7 +412,7 @@ export default function DashboardClient({ data }: DashboardClientProps) {
                       <p className="text-xs text-muted-foreground">{product.sales} sales</p>
                     </div>
                     <p className="text-sm font-medium text-primary">
-                      {formatConvertedPrice(product.revenue)}
+                      {formatConvertedPrice(product.revenue, 'NGN')}
                     </p>
                   </div>
                 ))}
