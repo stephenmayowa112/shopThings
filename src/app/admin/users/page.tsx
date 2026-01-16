@@ -89,10 +89,9 @@ export default function AdminUsersPage() {
 
       {/* Sidebar */}
       <aside
-        className={\`r
-          fixed top-0 left-0 z-50 h-full w-64 bg-primary text-white transform transition-transform duration-200 ease-in-out
-          lg:translate-x-0 \
-        \}
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-primary text-white transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
         <div className='flex items-center justify-between p-4 border-b border-white/10'>
           <Link href='/' className='flex items-center gap-2'>

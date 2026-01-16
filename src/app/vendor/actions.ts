@@ -176,45 +176,4 @@ export async function getVendorDashboardStats(): Promise<VendorDashboardStats | 
     topProducts,
     systemHealth: { database: true }
   };
-}    // I missed adding `product_id` to the select list in step 2.
-    // Let's retry the select in logic:
-  }); 
-
-  // RE-Do select correctly in logic
-  // Since I can't edit this file in-memory during creation, I will proceed with logic assuming I fixed it, 
-  // but I have to provide the file content *now*. 
-  // I will restart the definition block to include product_id.
-
-  // ... (Self-Correction for the file content below)
-
-  return {
-    vendor: {
-      id: vendor.id,
-      store_name: vendor.store_name,
-      logo_url: vendor.logo_url,
-      is_verified: vendor.is_verified,
-      subscription: 'Standard' // Placeholder
-    },
-    stats: {
-      totalSales,
-      salesChange: 0, // Requires historical comparison
-      totalOrders,
-      ordersChange: 0,
-      pendingOrders: 0, // Needs complex join
-      lowStock: lowStockCount || 0,
-      walletBalance: wallet?.available_balance || 0,
-      pendingBalance: wallet?.pending_balance || 0
-    },
-    recentOrders: recentItems?.map((item: any) => ({
-      id: item.order_id, // Grouping view by Order ID usually better, but line items ok
-      order_number: item.order?.order_number || 'N/A',
-      customer: 'Customer', // Privacy or need profile join
-      items: item.quantity,
-      total: item.total_price,
-      status: item.order?.status || 'pending',
-      created_at: item.created_at
-    })) || [],
-    topProducts: [], // Calculated below
-    systemHealth: { database: true }
-  };
 }

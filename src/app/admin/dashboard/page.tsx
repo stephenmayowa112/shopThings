@@ -249,7 +249,7 @@ export default function AdminDashboardPage() {
                 />
               </div>
             </div>
-            Date Range Filter */}
+            {/* Date Range Filter */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <h2 className="text-lg font-medium text-gray-700">Overview</h2>
             <div className="flex items-center gap-2 bg-white p-1 rounded-lg border shadow-sm">
