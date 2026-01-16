@@ -199,7 +199,7 @@ export default function OrdersPage() {
                         </span>
                       ))}
                       {order.itemCount > order.items.length && (
-                        <span> +{order.itemCount - order.items.reduce((acc, i) => acc + i.quantity, 0)} more</span>
+                        <span> +{order.itemCount - order.items.reduce((acc: number, i: any) => acc + i.quantity, 0)} more</span>
                       )}
                     </p>
                   </div>
