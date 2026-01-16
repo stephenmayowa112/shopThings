@@ -133,7 +133,7 @@ export class MessagingService {
           table: 'messages',
           filter: `conversation_id=eq.${conversationId}`,
         },
-        async (payload) => {
+        async (payload: any) => {
           // Fetch the complete message with sender info
           const { data } = await this.supabase
             .from('messages')
