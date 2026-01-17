@@ -8,6 +8,12 @@
     "start": "next start",
     "lint": "eslint"
   },
+  "overrides": {
+    "react-paystack": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
+  },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.89.0",
