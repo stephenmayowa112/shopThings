@@ -92,7 +92,7 @@ async function sendEmail(template: EmailTemplate): Promise<{ success: boolean; e
       subject: template.subject,
       html: template.html,
       text: template.text,
-      reply_to: EMAIL_CONFIG.replyTo,
+      replyTo: EMAIL_CONFIG.replyTo,
     });
 
     if (error) {
