@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { Upload, X, Image as ImageIcon, Loader2, AlertCircle } from 'lucide-react';
-import { Button } from './Button';
+import Button from './Button';
 import { uploadImage, uploadMultipleImages, deleteImage, compressImage, STORAGE_BUCKETS, type StorageBucket } from '@/lib/storage';
 
 interface ImageUploadProps {
