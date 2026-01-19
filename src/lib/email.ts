@@ -507,7 +507,7 @@ export async function sendProductModerationEmail(data: ProductModerationData): P
                 <li>Keep your inventory updated</li>
               </ul>
               
-              <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://shopthings.africa'}/vendor/products" class="button">View Your Products</a>
+              <a href="${EMAIL_CONFIG.baseUrl}/vendor/products" class="button">View Your Products</a>
               
               <p>Keep up the great work!<br>
               The ShopThings Africa Team</p>
@@ -556,7 +556,7 @@ export async function sendProductModerationEmail(data: ProductModerationData): P
               
               <p>Please make the necessary updates and resubmit your product for review.</p>
               
-              <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://shopthings.africa'}/vendor/products" class="button">Edit Product</a>
+              <a href="${EMAIL_CONFIG.baseUrl}/vendor/products" class="button">Edit Product</a>
               
               <p>If you have questions about these requirements, please contact our support team.</p>
               
