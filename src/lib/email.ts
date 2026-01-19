@@ -3,6 +3,18 @@
  * Handles all transactional emails for the marketplace
  */
 
+import { Resend } from 'resend';
+
+// Initialize Resend client
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Email configuration
+export const EMAIL_CONFIG = {
+  from: `${process.env.RESEND_FROM_NAME || 'ShopThings Africa'} <${process.env.RESEND_FROM_EMAIL || 'noreply@shopthingsafrica.work.gd'}>`,
+  replyTo: process.env.RESEND_REPLY_TO_EMAIL || 'support@shopthingsafrica.work.gd',
+  baseUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://shopthingsafrica.work.gd',
+};
+
 interface EmailTemplate {
   to: string;
   subject: string;
@@ -68,16 +80,33 @@ interface TwoFactorData {
  * Send email using Resend API
  */
 async function sendEmail(template: EmailTemplate): Promise<{ success: boolean; error?: string }> {
-  const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  const FROM_EMAIL = process.env.FROM_EMAIL || 'ShopThings <noreply@shopthings.africa>';
-
-  if (!RESEND_API_KEY) {
+  if (!process.env.RESEND_API_KEY) {
     console.error('RESEND_API_KEY not configured');
     return { success: false, error: 'Email service not configured' };
   }
 
   try {
-    const response = await fetch('https://api.resend.com/emails', {
+    const { data, error } = await resend.emails.send({
+      from: EMAIL_CONFIG.from,
+      to: template.to,
+      subject: template.subject,
+      html: template.html,
+      text: template.text,
+      reply_to: EMAIL_CONFIG.replyTo,
+    });
+
+    if (error) {
+      console.error('Resend API error:', error);
+      return { success: false, error: error.message };
+    }
+
+    console.log('Email sent successfully:', data?.id);
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to send email:', error);
+    return { success: false, error: 'Failed to send email' };
+  }
+}
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
