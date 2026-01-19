@@ -136,14 +136,18 @@ export async function handleProductStatusChange(productId: string, approved: boo
       .eq('id', productId)
       .single();
 
-    if (product && product.vendor?.user) {
-      await sendProductModerationEmail({
-        vendorName: product.vendor.user.full_name || 'Vendor',
-        productName: product.name,
-        email: product.vendor.user.email,
-        approved,
-        reason,
-      });
+    if (product && product.vendor && Array.isArray(product.vendor) && product.vendor.length > 0) {
+      const vendor = product.vendor[0];
+      if (vendor.user && Array.isArray(vendor.user) && vendor.user.length > 0) {
+        const userProfile = vendor.user[0];
+        await sendProductModerationEmail({
+          vendorName: userProfile.full_name || 'Vendor',
+          productName: product.name,
+          email: userProfile.email,
+          approved,
+          reason,
+        });
+      }
     }
   } catch (error) {
     console.error('Failed to send product moderation email:', error);
