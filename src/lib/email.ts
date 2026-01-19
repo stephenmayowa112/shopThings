@@ -387,7 +387,7 @@ export async function sendVendorApprovalEmail(data: VendorApprovalData): Promise
                 <li>Maintain good inventory levels</li>
               </ul>
               
-              <p>Need help? Check out our <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://shopthings.africa'}/vendor/help" style="color: #C1272D;">Vendor Guide</a> or contact our support team.</p>
+              <p>Need help? Check out our <a href="${EMAIL_CONFIG.baseUrl}/vendor/help" style="color: #C1272D;">Vendor Guide</a> or contact our support team.</p>
               
               <p>We're excited to have you as part of our community!<br>
               The ShopThings Africa Team</p>
@@ -444,7 +444,7 @@ export async function sendVendorApprovalEmail(data: VendorApprovalData): Promise
                 <li>Submit a new application when ready</li>
               </ul>
               
-              <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://shopthings.africa'}/vendor/apply" class="button">Apply Again</a>
+              <a href="${EMAIL_CONFIG.baseUrl}/vendor/apply" class="button">Apply Again</a>
               
               <p>If you have questions about this decision or need clarification, please don't hesitate to contact our support team.</p>
               
