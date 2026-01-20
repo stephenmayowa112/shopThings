@@ -1,24 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 import {
-  Store,
   Package,
-  ShoppingBag,
-  BarChart3,
-  Users,
-  Settings,
-  Home,
-  Menu,
-  X,
-  LogOut,
-  Shield,
   Search,
   Download,
-  ChevronLeft,
-  ChevronRight,
   MoreVertical,
   Eye,
   XCircle,
@@ -27,13 +15,14 @@ import {
   Flag,
   AlertTriangle,
   Calendar,
-  FileText,
   ImageIcon,
   Tag,
   DollarSign,
   Star,
+  X,
 } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
+import { AdminLayout } from '@/components/admin';
 import { useCurrencyStore } from '@/stores';
 import { getProductImage } from '@/lib/placeholders';
 
