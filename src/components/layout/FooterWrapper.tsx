@@ -2,16 +2,17 @@
 
 import { usePathname } from 'next/navigation';
 import Footer from './Footer';
-import DashboardFooter from './DashboardFooter';
 
 export default function FooterWrapper() {
   const pathname = usePathname();
   
-  // Show simplified footer on dashboard and vendor pages
-  const isDashboardPage = pathname?.startsWith('/dashboard') || pathname?.startsWith('/vendor');
+  // Don't show footer on dashboard, admin, or vendor pages
+  const isDashboardPage = pathname?.startsWith('/dashboard') || 
+                          pathname?.startsWith('/vendor') || 
+                          pathname?.startsWith('/admin');
   
   if (isDashboardPage) {
-    return <DashboardFooter />;
+    return null; // No footer for dashboard pages
   }
   
   return <Footer />;
