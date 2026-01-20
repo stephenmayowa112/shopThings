@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
         result = await sendOrderConfirmationEmail({
           orderNumber: 'TEST-001',
           customerName: 'Test Customer',
+          email: email,
           total: 99.99,
           currency: 'NGN',
           items: [

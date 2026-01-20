@@ -30,6 +30,7 @@ interface WelcomeEmailData {
 interface OrderConfirmationData {
   orderNumber: string;
   customerName: string;
+  email: string;
   total: number;
   currency: string;
   items: Array<{
@@ -234,7 +235,7 @@ export async function sendOrderConfirmationEmail(data: OrderConfirmationData): P
   `).join('');
 
   const template: EmailTemplate = {
-    to: data.customerName,
+    to: data.email,
     subject: `Order Confirmation - #${data.orderNumber}`,
     html: `
       <!DOCTYPE html>
