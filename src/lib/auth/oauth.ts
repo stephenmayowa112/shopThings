@@ -2,14 +2,10 @@
 
 import { createClient } from '@/lib/supabase/client';
 
-export type OAuthProvider = 'google' | 'apple';
+export type OAuthProvider = 'google';
 
 export async function signInWithGoogle() {
   return signInWithOAuth('google');
-}
-
-export async function signInWithApple() {
-  return signInWithOAuth('apple');
 }
 
 async function signInWithOAuth(provider: OAuthProvider) {

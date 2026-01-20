@@ -138,7 +138,7 @@ export async function resetPassword(password: string): Promise<AuthResult> {
   return { success: true };
 }
 
-export async function signInWithOAuth(provider: 'google' | 'apple'): Promise<{ url?: string; error?: string }> {
+export async function signInWithOAuth(provider: 'google'): Promise<{ url?: string; error?: string }> {
   const supabase = await createClient();
   
   const { data, error } = await supabase.auth.signInWithOAuth({
