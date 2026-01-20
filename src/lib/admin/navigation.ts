@@ -22,6 +22,7 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
   { label: 'Products', href: '/admin/products', icon: Package },
   { label: 'Orders', href: '/admin/orders', icon: ShoppingBag },
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
+  { label: 'Reports', href: '/admin/reports', icon: FileText },
   { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 

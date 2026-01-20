@@ -40,8 +40,10 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
             </span>
           </Link>
           <button
+            type="button"
             onClick={onClose}
             className="lg:hidden p-1 hover:bg-white/10 rounded"
+            aria-label="Close sidebar"
           >
             <X className="w-5 h-5" />
           </button>
@@ -96,7 +98,11 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
             <Store className="w-5 h-5" />
             <span>View Store</span>
           </Link>
-          <button className="flex items-center gap-3 px-3 py-2 text-white/80 hover:bg-white/10 rounded-lg transition-colors w-full">
+          <button 
+            type="button"
+            className="flex items-center gap-3 px-3 py-2 text-white/80 hover:bg-white/10 rounded-lg transition-colors w-full"
+            aria-label="Log out"
+          >
             <LogOut className="w-5 h-5" />
             <span>Log Out</span>
           </button>
