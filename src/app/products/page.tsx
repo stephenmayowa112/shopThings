@@ -18,7 +18,7 @@ import { Header, Footer } from '@/components/layout';
 import { ProductCard } from '@/components/products';
 import { Button, Input, Select, Checkbox } from '@/components/ui';
 import { useCurrencyStore } from '@/stores';
-import { getProducts } from '@/lib/products';
+import { searchProducts, getSearchSuggestions, SearchFilters } from '@/lib/search';
 import { ProductWithDetails } from '@/types';
 
 // Mock data removed in favor of Supabase fetching
@@ -55,13 +55,29 @@ function ProductsContent() {
   
   const [products, setProducts] = useState<ProductWithDetails[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
+  // Fetch products with search and filters
   useEffect(() => {
     async function fetchProducts() {
       setIsLoading(true);
       try {
-        const data = await getProducts();
-        setProducts(data);
+        const filters: SearchFilters = {
+          query: searchQuery,
+          category: categorySlug,
+          minPrice: priceRange.min ? parseInt(priceRange.min) : undefined,
+          maxPrice: priceRange.max ? parseInt(priceRange.max) : undefined,
+          verifiedOnly,
+          sortBy: sortBy as any,
+          page: currentPage,
+          limit: productsPerPage,
+        };
+
+        const result = await searchProducts(filters);
+        setProducts(result.products);
+        setTotalProducts(result.total);
+        setTotalPages(result.totalPages);
       } catch (error) {
         console.error('Failed to fetch products', error);
       } finally {
@@ -69,37 +85,15 @@ function ProductsContent() {
       }
     }
     fetchProducts();
-  }, []);
-  
-  const searchQuery = searchParams.get('search') || '';
-  const categorySlug = searchParams.get('category') || '';
+  }, [searchQuery, categorySlug, priceRange, verifiedOnly, sortBy, currentPage]);
   
   const productsPerPage = 12;
-  const totalProducts = products.length;
-  const totalPages = Math.ceil(totalProducts / productsPerPage);
 
-  // Filter and sort products
-  const filteredProducts = products.filter(product => {
-    if (searchQuery && !product.name.toLowerCase().includes(searchQuery.toLowerCase())) {
-      return false;
-    }
-    if (categorySlug && product.category.slug !== categorySlug) {
-      return false;
-    }
-    if (selectedCategories.length > 0 && !selectedCategories.includes(product.category.id)) {
-      return false;
-    }
-    if (verifiedOnly && !product.vendor.is_verified) {
-      return false;
-    }
-    if (priceRange.min && product.price < parseInt(priceRange.min)) {
-      return false;
-    }
-    if (priceRange.max && product.price > parseInt(priceRange.max)) {
-      return false;
-    }
-    return true;
-  });
+  const searchQuery = searchParams.get('search') || '';
+  const categorySlug = searchParams.get('category') || '';
+
+  // Filter and sort products - now handled by searchProducts
+  const filteredProducts = products; // Products are already filtered by the search function
 
   const handleCategoryToggle = (categoryId: string) => {
     setSelectedCategories(prev => 
