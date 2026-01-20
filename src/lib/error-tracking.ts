@@ -3,6 +3,8 @@
  * Provides centralized error handling, logging, and reporting
  */
 
+import React from 'react';
+
 export interface ErrorContext {
   userId?: string;
   userEmail?: string;

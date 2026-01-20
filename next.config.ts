@@ -6,7 +6,8 @@ const nextConfig: NextConfig = {
   
   // Performance optimizations
   experimental: {
-    optimizeCss: true,
+    // Temporarily disable CSS optimization to avoid critters issues
+    // optimizeCss: true,
     optimizePackageImports: ['lucide-react', '@supabase/supabase-js'],
   },
   

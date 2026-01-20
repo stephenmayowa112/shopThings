@@ -99,8 +99,14 @@ export class InputSanitizer {
   /**
    * Sanitize HTML content
    */
-  static sanitizeHTML(input: string): string {
-    return DOMPurify.sanitize(input, {
+  static async sanitizeHTML(input: string): Promise<string> {
+    const purify = await getDOMPurify();
+    if (!purify) {
+      // Fallback: remove all HTML tags
+      return input.replace(/<[^>]*>/g, '');
+    }
+    
+    return purify.sanitize(input, {
       ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p', 'br', 'ul', 'ol', 'li'],
       ALLOWED_ATTR: [],
     });
@@ -109,32 +115,38 @@ export class InputSanitizer {
   /**
    * Sanitize plain text (remove HTML tags)
    */
-  static sanitizeText(input: string): string {
-    return DOMPurify.sanitize(input, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
+  static async sanitizeText(input: string): Promise<string> {
+    const purify = await getDOMPurify();
+    if (!purify) {
+      // Fallback: remove all HTML tags
+      return input.replace(/<[^>]*>/g, '');
+    }
+    
+    return purify.sanitize(input, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
   }
 
   /**
-   * Sanitize email
+   * Sanitize email (synchronous)
    */
   static sanitizeEmail(email: string): string {
-    const sanitized = this.sanitizeText(email).toLowerCase().trim();
+    const sanitized = email.replace(/<[^>]*>/g, '').toLowerCase().trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(sanitized) ? sanitized : '';
   }
 
   /**
-   * Sanitize phone number
+   * Sanitize phone number (synchronous)
    */
   static sanitizePhone(phone: string): string {
-    return this.sanitizeText(phone).replace(/[^\d+\-\s()]/g, '');
+    return phone.replace(/<[^>]*>/g, '').replace(/[^\d+\-\s()]/g, '');
   }
 
   /**
-   * Sanitize URL
+   * Sanitize URL (synchronous)
    */
   static sanitizeURL(url: string): string {
     try {
-      const sanitized = this.sanitizeText(url);
+      const sanitized = url.replace(/<[^>]*>/g, '');
       const urlObj = new URL(sanitized);
       
       // Only allow http and https protocols
@@ -149,19 +161,21 @@ export class InputSanitizer {
   }
 
   /**
-   * Sanitize filename
+   * Sanitize filename (synchronous)
    */
   static sanitizeFilename(filename: string): string {
-    return this.sanitizeText(filename)
+    return filename
+      .replace(/<[^>]*>/g, '')
       .replace(/[^a-zA-Z0-9._-]/g, '')
       .substring(0, 255);
   }
 
   /**
-   * Sanitize search query
+   * Sanitize search query (synchronous)
    */
   static sanitizeSearchQuery(query: string): string {
-    return this.sanitizeText(query)
+    return query
+      .replace(/<[^>]*>/g, '') // Remove HTML tags
       .replace(/[<>]/g, '') // Remove potential XSS
       .trim()
       .substring(0, 100); // Limit length
@@ -514,7 +528,7 @@ export class BruteForceProtection {
   }
 }
 
-// Export convenience functions
+// Export convenience functions (async versions)
 export const sanitizeHTML = InputSanitizer.sanitizeHTML;
 export const sanitizeText = InputSanitizer.sanitizeText;
 export const sanitizeEmail = InputSanitizer.sanitizeEmail;
