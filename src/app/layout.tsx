@@ -8,6 +8,7 @@ import { ErrorBoundary } from "@/lib/error-tracking";
 import { ErrorTrackingSetup } from "@/components/ErrorTrackingSetup";
 import { WebsiteStructuredData } from "@/components/StructuredData";
 import { PerformanceSetup } from "@/components/PerformanceSetup";
+import { ServiceWorkerSetup } from "@/components/ServiceWorkerSetup";
 
 const poppins = Poppins({
   variable: "--font-poppins",
