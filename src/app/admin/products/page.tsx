@@ -201,403 +201,401 @@ export default function AdminProductsPage() {
 
   return (
     <AdminLayout title="Product Moderation" headerActions={headerActions}>
-          {/* Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-xl p-4 shadow-sm">
-              <p className="text-sm text-muted-foreground">Total Products</p>
-              <p className="text-2xl font-bold text-primary mt-1">{MOCK_PRODUCTS.length}</p>
-            </div>
-            <div className="bg-white rounded-xl p-4 shadow-sm">
-              <p className="text-sm text-muted-foreground">Pending Review</p>
-              <p className="text-2xl font-bold text-yellow-600 mt-1">
-                {MOCK_PRODUCTS.filter(p => p.status === 'pending_review').length}
-              </p>
-            </div>
-            <div className="bg-white rounded-xl p-4 shadow-sm">
-              <p className="text-sm text-muted-foreground">Flagged</p>
-              <p className="text-2xl font-bold text-orange-600 mt-1">
-                {MOCK_PRODUCTS.filter(p => p.status === 'flagged').length}
-              </p>
-            </div>
-            <div className="bg-white rounded-xl p-4 shadow-sm">
-              <p className="text-sm text-muted-foreground">Approved Today</p>
-              <p className="text-2xl font-bold text-green-600 mt-1">
-                {MOCK_PRODUCTS.filter(p => p.status === 'approved').length}
-              </p>
+      {/* Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
+          <p className="text-sm text-muted-foreground">Total Products</p>
+          <p className="text-2xl font-bold text-primary mt-1">{MOCK_PRODUCTS.length}</p>
+        </div>
+        <div className="bg-white rounded-xl p-4 shadow-sm">
+          <p className="text-sm text-muted-foreground">Pending Review</p>
+          <p className="text-2xl font-bold text-yellow-600 mt-1">
+            {MOCK_PRODUCTS.filter(p => p.status === 'pending_review').length}
+          </p>
+        </div>
+        <div className="bg-white rounded-xl p-4 shadow-sm">
+          <p className="text-sm text-muted-foreground">Flagged</p>
+          <p className="text-2xl font-bold text-orange-600 mt-1">
+            {MOCK_PRODUCTS.filter(p => p.status === 'flagged').length}
+          </p>
+        </div>
+        <div className="bg-white rounded-xl p-4 shadow-sm">
+          <p className="text-sm text-muted-foreground">Approved Today</p>
+          <p className="text-2xl font-bold text-green-600 mt-1">
+            {MOCK_PRODUCTS.filter(p => p.status === 'approved').length}
+          </p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Products List */}
+        <div className="lg:col-span-2 space-y-4">
+          {/* Filters */}
+          <div className="bg-white rounded-xl shadow-sm p-4">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Search products or vendors..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-3 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+                aria-label="Filter by status"
+              >
+                <option value="all">All Status</option>
+                <option value="pending_review">Pending Review</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+                <option value="flagged">Flagged</option>
+              </select>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Products List */}
-            <div className="lg:col-span-2 space-y-4">
-              {/* Filters */}
-              <div className="bg-white rounded-xl shadow-sm p-4">
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <div className="flex-1 relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                    <Input
-                      type="text"
-                      placeholder="Search products or vendors..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
-                  <select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className="px-3 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
-                    aria-label="Filter by status"
-                  >
-                    <option value="all">All Status</option>
-                    <option value="pending_review">Pending Review</option>
-                    <option value="approved">Approved</option>
-                    <option value="rejected">Rejected</option>
-                    <option value="flagged">Flagged</option>
-                  </select>
-                </div>
-              </div>
+          {/* Product Cards */}
+          {filteredProducts.map((product) => {
+            const statusConfig = STATUS_CONFIG[product.status];
+            const StatusIcon = statusConfig.icon;
 
-              {/* Product Cards */}
-              {filteredProducts.map((product) => {
-                const statusConfig = STATUS_CONFIG[product.status];
-                const StatusIcon = statusConfig.icon;
+            return (
+              <div
+                key={product.id}
+                className={`bg-white rounded-xl shadow-sm overflow-hidden cursor-pointer transition-shadow hover:shadow-md ${
+                  selectedProduct === product.id ? 'ring-2 ring-secondary' : ''
+                }`}
+                onClick={() => setSelectedProduct(product.id)}
+              >
+                <div className="p-4">
+                  <div className="flex gap-4">
+                    {/* Product Image */}
+                    <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden shrink-0">
+                      <Image
+                        src={getProductImage(product.images, product.id)}
+                        alt={product.name}
+                        width={80}
+                        height={80}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
 
-                return (
-                  <div
-                    key={product.id}
-                    className={`bg-white rounded-xl shadow-sm overflow-hidden cursor-pointer transition-shadow hover:shadow-md ${
-                      selectedProduct === product.id ? 'ring-2 ring-secondary' : ''
-                    }`}
-                    onClick={() => setSelectedProduct(product.id)}
-                  >
-                    <div className="p-4">
-                      <div className="flex gap-4">
-                        {/* Product Image */}
-                        <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden shrink-0">
-                          <Image
-                            src={getProductImage(product.images, product.id)}
-                            alt={product.name}
-                            width={80}
-                            height={80}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-
-                        {/* Product Info */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between mb-1">
-                            <h3 className="font-medium text-foreground truncate pr-2">{product.name}</h3>
-                            <div className="flex items-center gap-2 shrink-0">
-                              <span className={`flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full ${statusConfig.bg} ${statusConfig.text}`}>
-                                <StatusIcon className="w-3 h-3" />
-                                {statusConfig.label}
-                              </span>
-                              <div className="relative">
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setShowActions(showActions === product.id ? null : product.id);
-                                  }}
-                                  className="p-1 hover:bg-gray-100 rounded"
-                                  aria-label="More actions"
-                                >
-                                  <MoreVertical className="w-4 h-4 text-gray-500" />
+                    {/* Product Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between mb-1">
+                        <h3 className="font-medium text-foreground truncate pr-2">{product.name}</h3>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className={`flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full ${statusConfig.bg} ${statusConfig.text}`}>
+                            <StatusIcon className="w-3 h-3" />
+                            {statusConfig.label}
+                          </span>
+                          <div className="relative">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setShowActions(showActions === product.id ? null : product.id);
+                              }}
+                              className="p-1 hover:bg-gray-100 rounded"
+                              aria-label="More actions"
+                            >
+                              <MoreVertical className="w-4 h-4 text-gray-500" />
+                            </button>
+                            {showActions === product.id && (
+                              <div className="absolute right-0 mt-1 w-48 bg-white border rounded-lg shadow-lg z-10">
+                                <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-left hover:bg-gray-50">
+                                  <Eye className="w-4 h-4" />
+                                  View Details
                                 </button>
-                                {showActions === product.id && (
-                                  <div className="absolute right-0 mt-1 w-48 bg-white border rounded-lg shadow-lg z-10">
-                                    <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-left hover:bg-gray-50">
-                                      <Eye className="w-4 h-4" />
-                                      View Details
+                                {product.status === 'pending_review' && (
+                                  <>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleApprove(product.id);
+                                      }}
+                                      className="flex items-center gap-2 w-full px-4 py-2 text-sm text-left text-green-600 hover:bg-green-50"
+                                    >
+                                      <CheckCircle className="w-4 h-4" />
+                                      Approve
                                     </button>
-                                    {product.status === 'pending_review' && (
-                                      <>
-                                        <button
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleApprove(product.id);
-                                          }}
-                                          className="flex items-center gap-2 w-full px-4 py-2 text-sm text-left text-green-600 hover:bg-green-50"
-                                        >
-                                          <CheckCircle className="w-4 h-4" />
-                                          Approve
-                                        </button>
-                                        <button
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            setShowRejectModal(product.id);
-                                            setShowActions(null);
-                                          }}
-                                          className="flex items-center gap-2 w-full px-4 py-2 text-sm text-left text-red-600 hover:bg-red-50"
-                                        >
-                                          <XCircle className="w-4 h-4" />
-                                          Reject
-                                        </button>
-                                      </>
-                                    )}
-                                    {product.status !== 'flagged' && (
-                                      <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setShowFlagModal(product.id);
-                                          setShowActions(null);
-                                        }}
-                                        className="flex items-center gap-2 w-full px-4 py-2 text-sm text-left text-orange-600 hover:bg-orange-50"
-                                      >
-                                        <Flag className="w-4 h-4" />
-                                        Flag Product
-                                      </button>
-                                    )}
-                                  </div>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setShowRejectModal(product.id);
+                                        setShowActions(null);
+                                      }}
+                                      className="flex items-center gap-2 w-full px-4 py-2 text-sm text-left text-red-600 hover:bg-red-50"
+                                    >
+                                      <XCircle className="w-4 h-4" />
+                                      Reject
+                                    </button>
+                                  </>
+                                )}
+                                {product.status !== 'flagged' && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setShowFlagModal(product.id);
+                                      setShowActions(null);
+                                    }}
+                                    className="flex items-center gap-2 w-full px-4 py-2 text-sm text-left text-orange-600 hover:bg-orange-50"
+                                  >
+                                    <Flag className="w-4 h-4" />
+                                    Flag Product
+                                  </button>
                                 )}
                               </div>
-                            </div>
-                          </div>
-
-                          <p className="text-sm text-muted-foreground mb-2">
-                            by <span className="text-foreground">{product.vendor.store_name}</span>
-                          </p>
-
-                          <div className="flex items-center gap-4 text-sm">
-                            <span className="flex items-center gap-1">
-                              <Tag className="w-4 h-4 text-gray-400" />
-                              {product.category}
-                            </span>
-                            <span className="font-medium text-primary">
-                              {formatConvertedPrice(product.price, 'NGN')}
-                            </span>
-                            {product.compare_at_price && (
-                              <span className="text-muted-foreground line-through">
-                                {formatConvertedPrice(product.compare_at_price, 'NGN')}
-                              </span>
                             )}
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Quick Actions for Pending */}
-                    {product.status === 'pending_review' && (
-                      <div className="px-4 py-3 bg-yellow-50 border-t border-yellow-100 flex items-center justify-between">
-                        <span className="text-sm text-yellow-800">
-                          Submitted {new Date(product.submitted_at || product.created_at).toLocaleDateString()}
+                      <p className="text-sm text-muted-foreground mb-2">
+                        by <span className="text-foreground">{product.vendor.store_name}</span>
+                      </p>
+
+                      <div className="flex items-center gap-4 text-sm">
+                        <span className="flex items-center gap-1">
+                          <Tag className="w-4 h-4 text-gray-400" />
+                          {product.category}
                         </span>
+                        <span className="font-medium text-primary">
+                          {formatConvertedPrice(product.price, 'NGN')}
+                        </span>
+                        {product.compare_at_price && (
+                          <span className="text-muted-foreground line-through">
+                            {formatConvertedPrice(product.compare_at_price, 'NGN')}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Actions for Pending */}
+                {product.status === 'pending_review' && (
+                  <div className="px-4 py-3 bg-yellow-50 border-t border-yellow-100 flex items-center justify-between">
+                    <span className="text-sm text-yellow-800">
+                      Submitted {new Date(product.submitted_at || product.created_at).toLocaleDateString()}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="text-red-600 border-red-200 hover:bg-red-50"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowRejectModal(product.id);
+                        }}
+                      >
+                        Reject
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleApprove(product.id);
+                        }}
+                      >
+                        Approve
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Flagged Alert */}
+                {product.status === 'flagged' && product.flag_reason && (
+                  <div className="px-4 py-3 bg-orange-50 border-t border-orange-100">
+                    <div className="flex items-start gap-2">
+                      <AlertTriangle className="w-4 h-4 text-orange-600 shrink-0 mt-0.5" />
+                      <p className="text-sm text-orange-800">{product.flag_reason}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+
+          {/* Pagination */}
+          <div className="flex items-center justify-between py-4">
+            <p className="text-sm text-muted-foreground">
+              Showing {filteredProducts.length} of {MOCK_PRODUCTS.length} products
+            </p>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(prev => prev - 1)}
+              >
+                Previous
+              </Button>
+              <span className="text-sm px-3">Page {currentPage}</span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => prev + 1)}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Product Details Sidebar */}
+        <div className="lg:col-span-1">
+          {selectedProduct ? (
+            <div className="bg-white rounded-xl shadow-sm sticky top-24">
+              {(() => {
+                const product = getProduct(selectedProduct);
+                if (!product) return null;
+
+                const statusConfig = STATUS_CONFIG[product.status];
+
+                return (
+                  <>
+                    <div className="p-4 border-b">
+                      <h2 className="font-heading font-bold text-primary">Product Details</h2>
+                    </div>
+                    <div className="p-4 space-y-4">
+                      {/* Product Image */}
+                      <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                        <Image
+                          src={getProductImage(product.images, product.id)}
+                          alt={product.name}
+                          width={400}
+                          height={400}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      {/* Product Name & Status */}
+                      <div>
+                        <h3 className="font-bold text-foreground">{product.name}</h3>
+                        <span className={`inline-flex items-center gap-1 mt-2 px-2 py-1 text-xs font-medium rounded-full ${statusConfig.bg} ${statusConfig.text}`}>
+                          {statusConfig.label}
+                        </span>
+                      </div>
+
+                      {/* Vendor */}
+                      <div className="pt-4 border-t">
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Vendor</p>
+                        <Link
+                          href={`/admin/vendors?id=${product.vendor.id}`}
+                          className="flex items-center gap-2 hover:text-secondary"
+                        >
+                          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                            <Package className="w-4 h-4 text-gray-400" />
+                          </div>
+                          <span className="font-medium">{product.vendor.store_name}</span>
+                        </Link>
+                      </div>
+
+                      {/* Pricing */}
+                      <div className="pt-4 border-t">
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Pricing</p>
                         <div className="flex items-center gap-2">
+                          <DollarSign className="w-4 h-4 text-gray-400" />
+                          <span className="text-xl font-bold text-primary">{formatConvertedPrice(product.price, 'NGN')}</span>
+                          {product.compare_at_price && (
+                            <span className="text-sm text-muted-foreground line-through">
+                              {formatConvertedPrice(product.compare_at_price, 'NGN')}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Category */}
+                      <div className="pt-4 border-t">
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Category</p>
+                        <div className="flex items-center gap-2">
+                          <Tag className="w-4 h-4 text-gray-400" />
+                          <span>{product.category}</span>
+                        </div>
+                      </div>
+
+                      {/* Description */}
+                      <div className="pt-4 border-t">
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Description</p>
+                        <p className="text-sm text-foreground">{product.description}</p>
+                      </div>
+
+                      {/* Stock */}
+                      <div className="pt-4 border-t">
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Stock Quantity</p>
+                        <p className="font-medium">{product.stock_quantity} units</p>
+                      </div>
+
+                      {/* Rejection Reason */}
+                      {product.rejection_reason && (
+                        <div className="pt-4 border-t">
+                          <p className="text-sm font-medium text-red-600 mb-2">Rejection Reason</p>
+                          <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+                            {product.rejection_reason}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Flag Reason */}
+                      {product.flag_reason && (
+                        <div className="pt-4 border-t">
+                          <p className="text-sm font-medium text-orange-600 mb-2">Flag Reason</p>
+                          <p className="text-sm text-orange-600 bg-orange-50 p-3 rounded-lg">
+                            {product.flag_reason}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Created Date */}
+                      <div className="pt-4 border-t">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Calendar className="w-4 h-4" />
+                          <span>
+                            Created on {new Date(product.created_at).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                            })}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      {product.status === 'pending_review' && (
+                        <div className="pt-4 border-t flex gap-2">
                           <Button
-                            size="sm"
                             variant="outline"
-                            className="text-red-600 border-red-200 hover:bg-red-50"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setShowRejectModal(product.id);
-                            }}
+                            className="flex-1 text-red-600 border-red-200 hover:bg-red-50"
+                            onClick={() => setShowRejectModal(product.id)}
                           >
                             Reject
                           </Button>
                           <Button
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleApprove(product.id);
-                            }}
+                            className="flex-1"
+                            onClick={() => handleApprove(product.id)}
                           >
                             Approve
                           </Button>
                         </div>
-                      </div>
-                    )}
-
-                    {/* Flagged Alert */}
-                    {product.status === 'flagged' && product.flag_reason && (
-                      <div className="px-4 py-3 bg-orange-50 border-t border-orange-100">
-                        <div className="flex items-start gap-2">
-                          <AlertTriangle className="w-4 h-4 text-orange-600 shrink-0 mt-0.5" />
-                          <p className="text-sm text-orange-800">{product.flag_reason}</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
+                  </>
                 );
-              })}
-
-              {/* Pagination */}
-              <div className="flex items-center justify-between py-4">
-                <p className="text-sm text-muted-foreground">
-                  Showing {filteredProducts.length} of {MOCK_PRODUCTS.length} products
-                </p>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={currentPage === 1}
-                    onClick={() => setCurrentPage(prev => prev - 1)}
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </Button>
-                  <span className="text-sm px-3">Page {currentPage}</span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage(prev => prev + 1)}
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
+              })()}
             </div>
-
-            {/* Product Details Sidebar */}
-            <div className="lg:col-span-1">
-              {selectedProduct ? (
-                <div className="bg-white rounded-xl shadow-sm sticky top-24">
-                  {(() => {
-                    const product = getProduct(selectedProduct);
-                    if (!product) return null;
-
-                    const statusConfig = STATUS_CONFIG[product.status];
-
-                    return (
-                      <>
-                        <div className="p-4 border-b">
-                          <h2 className="font-heading font-bold text-primary">Product Details</h2>
-                        </div>
-                        <div className="p-4 space-y-4">
-                          {/* Product Image */}
-                          <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                            <Image
-                              src={getProductImage(product.images, product.id)}
-                              alt={product.name}
-                              width={400}
-                              height={400}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-
-                          {/* Product Name & Status */}
-                          <div>
-                            <h3 className="font-bold text-foreground">{product.name}</h3>
-                            <span className={`inline-flex items-center gap-1 mt-2 px-2 py-1 text-xs font-medium rounded-full ${statusConfig.bg} ${statusConfig.text}`}>
-                              {statusConfig.label}
-                            </span>
-                          </div>
-
-                          {/* Vendor */}
-                          <div className="pt-4 border-t">
-                            <p className="text-sm font-medium text-muted-foreground mb-2">Vendor</p>
-                            <Link
-                              href={`/admin/vendors?id=${product.vendor.id}`}
-                              className="flex items-center gap-2 hover:text-secondary"
-                            >
-                              <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                                <Store className="w-4 h-4 text-gray-400" />
-                              </div>
-                              <span className="font-medium">{product.vendor.store_name}</span>
-                            </Link>
-                          </div>
-
-                          {/* Pricing */}
-                          <div className="pt-4 border-t">
-                            <p className="text-sm font-medium text-muted-foreground mb-2">Pricing</p>
-                            <div className="flex items-center gap-2">
-                              <DollarSign className="w-4 h-4 text-gray-400" />
-                              <span className="text-xl font-bold text-primary">{formatConvertedPrice(product.price, 'NGN')}</span>
-                              {product.compare_at_price && (
-                                <span className="text-sm text-muted-foreground line-through">
-                                  {formatConvertedPrice(product.compare_at_price, 'NGN')}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Category */}
-                          <div className="pt-4 border-t">
-                            <p className="text-sm font-medium text-muted-foreground mb-2">Category</p>
-                            <div className="flex items-center gap-2">
-                              <Tag className="w-4 h-4 text-gray-400" />
-                              <span>{product.category}</span>
-                            </div>
-                          </div>
-
-                          {/* Description */}
-                          <div className="pt-4 border-t">
-                            <p className="text-sm font-medium text-muted-foreground mb-2">Description</p>
-                            <p className="text-sm text-foreground">{product.description}</p>
-                          </div>
-
-                          {/* Stock */}
-                          <div className="pt-4 border-t">
-                            <p className="text-sm font-medium text-muted-foreground mb-2">Stock Quantity</p>
-                            <p className="font-medium">{product.stock_quantity} units</p>
-                          </div>
-
-                          {/* Rejection Reason */}
-                          {product.rejection_reason && (
-                            <div className="pt-4 border-t">
-                              <p className="text-sm font-medium text-red-600 mb-2">Rejection Reason</p>
-                              <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
-                                {product.rejection_reason}
-                              </p>
-                            </div>
-                          )}
-
-                          {/* Flag Reason */}
-                          {product.flag_reason && (
-                            <div className="pt-4 border-t">
-                              <p className="text-sm font-medium text-orange-600 mb-2">Flag Reason</p>
-                              <p className="text-sm text-orange-600 bg-orange-50 p-3 rounded-lg">
-                                {product.flag_reason}
-                              </p>
-                            </div>
-                          )}
-
-                          {/* Created Date */}
-                          <div className="pt-4 border-t">
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <Calendar className="w-4 h-4" />
-                              <span>
-                                Created on {new Date(product.created_at).toLocaleDateString('en-US', {
-                                  year: 'numeric',
-                                  month: 'long',
-                                  day: 'numeric',
-                                })}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Actions */}
-                          {product.status === 'pending_review' && (
-                            <div className="pt-4 border-t flex gap-2">
-                              <Button
-                                variant="outline"
-                                className="flex-1 text-red-600 border-red-200 hover:bg-red-50"
-                                onClick={() => setShowRejectModal(product.id)}
-                              >
-                                Reject
-                              </Button>
-                              <Button
-                                className="flex-1"
-                                onClick={() => handleApprove(product.id)}
-                              >
-                                Approve
-                              </Button>
-                            </div>
-                          )}
-                        </div>
-                      </>
-                    );
-                  })()}
-                </div>
-              ) : (
-                <div className="bg-white rounded-xl shadow-sm p-8 text-center">
-                  <Package className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                  <p className="text-muted-foreground">
-                    Select a product to view details
-                  </p>
-                </div>
-              )}
+          ) : (
+            <div className="bg-white rounded-xl shadow-sm p-8 text-center">
+              <Package className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+              <p className="text-muted-foreground">
+                Select a product to view details
+              </p>
             </div>
-          </div>
-        </main>
+          )}
+        </div>
       </div>
 
       {/* Reject Modal */}
@@ -701,6 +699,6 @@ export default function AdminProductsPage() {
           </div>
         </div>
       )}
-    </div>
+    </AdminLayout>
   );
 }
