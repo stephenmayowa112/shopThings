@@ -4,8 +4,8 @@ import "./globals.css";
 import { Header, LiveChatSupport } from "@/components/layout";
 import FooterWrapper from "@/components/layout/FooterWrapper";
 import { AuthProvider } from "@/components/providers";
-import { ErrorBoundary, setupGlobalErrorHandling } from "@/lib/error-tracking";
-import { useEffect } from "react";
+import { ErrorBoundary } from "@/lib/error-tracking";
+import { ErrorTrackingSetup } from "@/components/ErrorTrackingSetup";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -31,14 +31,6 @@ export const metadata: Metadata = {
     ],
   },
 };
-
-function ErrorTrackingSetup() {
-  useEffect(() => {
-    setupGlobalErrorHandling();
-  }, []);
-  
-  return null;
-}
 
 export default function RootLayout({
   children,
