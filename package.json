@@ -10,7 +10,8 @@
     "test": "node scripts/test-basic-functionality.js",
     "test:db": "node -e \"require('./scripts/test-basic-functionality.js').testDatabaseConnection()\"",
     "test:storage": "node -e \"require('./scripts/test-basic-functionality.js').testStorageBuckets()\"",
-    "precommit": "npm run lint && npm run test"
+    "security:audit": "node scripts/security-audit.js",
+    "precommit": "npm run lint && npm run test && npm run security:audit"
   },
   "overrides": {
     "react-paystack": {
