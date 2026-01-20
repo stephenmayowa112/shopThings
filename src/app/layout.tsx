@@ -123,6 +123,7 @@ export default function RootLayout({
         <ErrorBoundary>
           <ErrorTrackingSetup />
           <PerformanceSetup />
+          <ServiceWorkerSetup />
           <WebsiteStructuredData />
           <AuthProvider>
             <Header />
