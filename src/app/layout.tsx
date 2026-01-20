@@ -120,6 +120,7 @@ export default function RootLayout({
       >
         <ErrorBoundary>
           <ErrorTrackingSetup />
+          <WebsiteStructuredData />
           <AuthProvider>
             <Header />
             <main className="min-h-screen">
