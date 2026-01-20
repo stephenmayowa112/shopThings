@@ -14,7 +14,22 @@ function createSupabaseClient() {
     );
   }
 
-  return createBrowserClient(supabaseUrl, supabaseAnonKey);
+  return createBrowserClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+    },
+    global: {
+      headers: {
+        'X-Client-Info': 'shopthings-marketplace',
+      },
+    },
+    // Add connection timeout and retry settings
+    db: {
+      schema: 'public',
+    },
+  });
 }
 
 export function createClient() {
