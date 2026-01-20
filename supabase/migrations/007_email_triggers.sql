@@ -114,21 +114,13 @@ CREATE TRIGGER on_product_status_changed
   AFTER UPDATE ON products
   FOR EACH ROW EXECUTE FUNCTION handle_product_status_change();
 
--- Verification
-DO $
-BEGIN
-    RAISE NOTICE '========================================';
-    RAISE NOTICE 'Email Triggers Setup Complete!';
-    RAISE NOTICE '========================================';
-    RAISE NOTICE '';
-    RAISE NOTICE 'Triggers Created:';
-    RAISE NOTICE '- User signup → Welcome email';
-    RAISE NOTICE '- Order created → Confirmation email';
-    RAISE NOTICE '- Vendor status → Approval/rejection email';
-    RAISE NOTICE '- Product status → Moderation email';
-    RAISE NOTICE '';
-    RAISE NOTICE 'Your app will receive notifications via pg_notify';
-    RAISE NOTICE 'when these events occur.';
-    RAISE NOTICE '';
-    RAISE NOTICE '========================================';
-END $;
+-- Verification - Email triggers setup complete
+-- The following triggers have been created:
+-- - User signup → Welcome email notification
+-- - Order created → Confirmation email notification  
+-- - Vendor status → Approval/rejection email notification
+-- - Product status → Moderation email notification
+--
+-- Your app will receive notifications via pg_notify when these events occur.
+
+SELECT 'Email triggers setup completed successfully!' as status;
