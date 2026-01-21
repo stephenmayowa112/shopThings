@@ -59,22 +59,11 @@ export default function AdminUserProfilePage() {
   const fetchUserProfile = async () => {
     setIsLoading(true);
     try {
-      // For now, we'll create a mock user profile
-      // In production, you'd fetch from your API
-      const mockUser: UserProfile = {
-        id: userId,
-        email: 'user@example.com',
-        full_name: 'John Doe',
-        role: 'buyer',
-        created_at: new Date().toISOString(),
-        orders: 5,
-        total_spent: 250.00,
-        last_login: new Date().toISOString(),
-      };
-      
-      setUser(mockUser);
+      const userData = await getAdminUserById(userId);
+      setUser(userData);
     } catch (error) {
       console.error('Failed to fetch user profile:', error);
+      setUser(null);
     } finally {
       setIsLoading(false);
     }
