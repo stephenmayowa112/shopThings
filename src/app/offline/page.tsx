@@ -1,10 +1,6 @@
-import { Metadata } from 'next';
-import { Wifi, RefreshCw } from 'lucide-react';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Offline - ShopThings',
-  description: 'You are currently offline. Please check your internet connection.',
-};
+import { Wifi, RefreshCw } from 'lucide-react';
 
 export default function OfflinePage() {
   return (
@@ -25,6 +21,7 @@ export default function OfflinePage() {
         
         <div className="space-y-4">
           <button
+            type="button"
             onClick={() => window.location.reload()}
             className="inline-flex items-center justify-center gap-2 w-full px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
           >
@@ -33,6 +30,7 @@ export default function OfflinePage() {
           </button>
           
           <button
+            type="button"
             onClick={() => window.history.back()}
             className="inline-flex items-center justify-center w-full px-6 py-3 border border-border text-foreground rounded-lg hover:bg-muted transition-colors font-medium"
           >
