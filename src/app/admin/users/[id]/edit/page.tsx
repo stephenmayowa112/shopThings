@@ -11,7 +11,7 @@ import {
   Calendar,
   Upload,
 } from 'lucide-react';
-import { Button, Input, Select } from '@/components/ui';
+import { Button, Input } from '@/components/ui';
 import { AdminLayout } from '@/components/admin';
 import { getAdminUserById, updateUserProfile } from '../../actions';
 
