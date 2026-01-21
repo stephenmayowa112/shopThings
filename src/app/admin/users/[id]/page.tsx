@@ -24,7 +24,8 @@ import {
   suspendUser, 
   unsuspendUser, 
   deleteUser, 
-  resetUserPassword 
+  resetUserPassword,
+  getAdminUserById
 } from '../../actions';
 
 interface UserProfile {

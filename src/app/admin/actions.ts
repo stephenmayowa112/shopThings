@@ -365,6 +365,54 @@ export async function resetUserPassword(userId: string, email: string) {
   return { success: true };
 }
 
+export async function getAdminUserById(userId: string) {
+  const supabase = await createClient();
+  
+  const { data, error } = await supabase
+    .from('profiles')
+    .select(`
+      *,
+      orders:orders(count),
+      total_spent:orders(total).eq(payment_status, 'completed')
+    `)
+    .eq('id', userId)
+    .single();
+  
+  if (error) throw error;
+  
+  // Calculate total spent
+  const totalSpent = data.total_spent?.reduce((sum: number, order: any) => sum + (order.total || 0), 0) || 0;
+  const orderCount = (data.orders as any)?.[0]?.count || 0;
+  
+  return {
+    ...data,
+    orders: orderCount,
+    total_spent: totalSpent,
+  };
+}
+
+export async function updateUserProfile(userId: string, updates: {
+  full_name?: string;
+  email?: string;
+  role?: string;
+  phone?: string;
+  bio?: string;
+  avatar_url?: string;
+}) {
+  const supabase = await createClient();
+  
+  const { error } = await supabase
+    .from('profiles')
+    .update(updates)
+    .eq('id', userId);
+  
+  if (error) throw error;
+  
+  revalidatePath('/admin/users');
+  revalidatePath(`/admin/users/${userId}`);
+  return { success: true };
+}
+
 export async function impersonateUser(userId: string) {
   // This would require special implementation for admin impersonation
   // For security reasons, this should be logged and have strict controls
